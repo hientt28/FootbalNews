@@ -15,18 +15,22 @@ Route::group(['middleware' => 'web'], function () {
         'as' => '/',
         'uses' => 'HomeController@index',
     ]);
-    Route::group(['prefix' => 'admin'], function () {
+    Route::group(['prefix' => 'admin', 'namespace' => 'Admin',
+        'middleware' => 'auth'], function () {
         Route::get('/', [
             'as' => 'admin.welcome',
-            'uses' => 'HomeController@welcome'
+            'uses' => 'AdminController@welcome'
         ]);
+        Route::resource('news', 'NewsController');
+        Route::resource('matches', 'MatchController');
     });
-    Route::group(['prefix' => 'users', 'namespace' => 'User'], function () {
+    Route::group(['prefix' => 'users', 'namespace' => 'User', 
+        'middleware' => 'auth'], function () {
         Route::get('/', [
             'as' => 'users.welcome',
             'uses' => 'UserController@welcome'
         ]);
-        Route::resource('news', 'NewController');
+        Route::resource('news', 'NewsController');
         Route::resource('matches', 'MatchController', ['only' => ['index', 'show']]);
     });
 });

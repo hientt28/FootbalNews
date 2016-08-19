@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ trans('app.app_name') }}</title>
 
@@ -16,11 +17,10 @@
     <link href="{{ asset('css/semantic.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/jqx.base.css') }}" rel="stylesheet">
     <link href="{{ asset('css/jqx.ui-redmond.css') }}" rel="stylesheet">
-
 </head>
 <body id="app-layout">
-<div class="ui fixed inverted menu">
-    <div class="ui container">
+<div class="ui fixed inverted menu full height">
+    <div class="main ui container">
         <a class="launch icon item" onclick="(function () {
                 $('.ui.sidebar').sidebar('toggle');
             })()">
@@ -75,7 +75,7 @@
         {{ trans('app.team') }}
       </a>
        @can('is_admin', Auth::user())
-       <a class="item">
+       <a class="item" href="{{ route('admin.matches.index') }}">
             <i class="soccer icon"></i>&nbsp;
             {{ trans('app.match') }}
         </a>
@@ -89,9 +89,31 @@
     </div>
     <div class="pusher">
     </div>
-
 </div>
-@yield('content')
+@if(!Auth::guest())
+<div class="ui stackable grid">
+    <div class="equal height row">
+        <div class="two wide column">
+        </div>
+        <div class="twelve wide column">
+            <div class="ui segment content">
+                <div class="ui big breadcrumb">
+                  <a class="section">Home</a>
+                  <i class="right chevron icon divider"></i>
+                  <a class="section">Matches List</a>
+                  <i class="right chevron icon divider"></i>
+                  <div class="active section">Personal Information</div>
+                </div>
+                @yield('content')
+            </div>
+        </div>
+        <div class="two wide column">
+        </div>
+    </div>
+</div>    
+@else
+    @yield('content')
+@endif
 @if(!Auth::guest())
 <div class="ui black inverted vertical footer segment">
   <div class="ui center aligned container">
@@ -115,5 +137,7 @@
 <script src="{{ asset('js/app.js') }}"></script>
 <script src="{{ asset('js/semantic.min.js') }}"></script>
 <script src="{{ asset('js/jqx-all.js') }}"></script>
+<script src="https://maps.googleapis.com/maps/api/js?json?&mode=transit&origin=frontera+el+hierro&destination=la+restinga+el+hierro&departure_time=1399995076&key=AIzaSyBY2xnVxwjLYhuBNmhiMDUExm-vpUBa-IY&&libraries=places&callback=app.initMap"p
+         async defer></script>
 </body>
 </html>

@@ -9,6 +9,7 @@
 
 #app-layout{
   background: #d4d4d5;
+  /*background-image:url(images/redmond/ui-icons_6da8d5_256x240.png);*/
 }
 
 /* Pen Title */
@@ -33,6 +34,8 @@
   font-weight: 600;
   text-decoration: none;
 }
+
+.jqx-widget-header-ui-redmond{font-family: Lucida Grande, Lucida Sans, Arial, sans-serif; border-color: #4297d7; background: #337ab7 !important; color: #ffffff; font-size:13px}
 
 /* Container */
 .login-form {
@@ -391,9 +394,82 @@
 }
 
 .page-content {
-    margin : 10% 0 0 2%;
+    margin : 2% 0 0 2%;
 }
 
+.ui.fixed.menu {
+    z-index: 999999999 !important;
+}
+
+#Menu {
+    height : 210px !important ;
+}
+
+#Menu>ul>li {
+  width : 83% !important;
+}
+
+.team-select {
+    box-shadow: 0 0 0 1px #A3C293 inset,0 0 0 0 transparent;
+    background-color: #FCFFF5;
+    color: #2C662D;
+    margin: 1em 0;
+    border-radius: .28571429rem;
+}
+
+#map {
+        height: 100%;
+      }
+      .controls {
+        margin-top: 10px;
+        border: 1px solid transparent;
+        border-radius: 2px 0 0 2px;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        height: 32px;
+        outline: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      }
+
+      #pac-input {
+        background-color: #fff;
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+        margin-left: 12px;
+        padding: 0 11px 0 13px;
+        text-overflow: ellipsis;
+        width: 300px;
+      }
+
+      #pac-input:focus {
+        border-color: #4d90fe;
+      }
+
+      .pac-container {
+        font-family: Roboto;
+        z-index : 9999999999999999;
+      }
+
+      #type-selector {
+        color: #fff;
+        background-color: #4d90fe;
+        padding: 5px 11px 0px 11px;
+      }
+
+      #type-selector label {
+        font-family: Roboto;
+        font-size: 13px;
+        font-weight: 300;
+      }
+      #target {
+        width: 345px;
+      }
+
+      input[name="address"] {
+          color: blue !important;
+          font-weight: bold;
+      }
 /* Keyframes */
 @-webkit-keyframes buttonFadeInUp {
   0% {
