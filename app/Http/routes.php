@@ -15,6 +15,12 @@ Route::group(['middleware' => 'web'], function () {
         'as' => '/',
         'uses' => 'HomeController@index',
     ]);
+
+    Route::get('register/verify/{confirmation_code}', [
+        'as' => 'user.active',
+        'uses' => 'Auth\AuthController@confirm'
+    ]);
+    
     Route::group(['prefix' => 'admin'], function () {
         Route::get('/', [
             'as' => 'admin.welcome',
