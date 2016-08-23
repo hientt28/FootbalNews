@@ -47,7 +47,7 @@
                 </a>
             @else
                 @can('is_admin', Auth::user())
-                    <a href="{{ route('admin.welcome') }}" class="item"><i class="newspaper icon"></i>&nbsp;{{ trans('app.new') }}</a>
+                    <a href="{{ route('admin.news.index') }}" class="item"><i class="newspaper icon"></i>&nbsp;{{ trans('app.new') }}</a>
                 @else
                     <a href="{{ route('users.news.index') }}" class="item"><i class="newspaper icon"></i>&nbsp;{{ trans('app.new') }}</a>
                 @endcan
@@ -55,12 +55,16 @@
                 <div class="ui simple dropdown item">
                     {{ Auth::user()->name }} <i class="dropdown icon"></i>
                     <div class="menu">
-                        <a class="item" href="{{ url('/logout') }}" class="ui inverted button"><i
-                                    class="sign out icon"></i>&nbsp; {{ trans('login.logout') }}</a>
+                        <a class="item" href="{{ url('/logout') }}" class="ui inverted button"><i class="sign out icon"></i>&nbsp; {{ trans('login.logout') }}</a>
                         <a class="item" href="#"><i class="user icon"></i>&nbsp;{{ trans('app.profile') }}</a>
                         <a class="item" href="#"><i class="flag outline icon"></i>&nbsp;{{ trans('app.languages') }}</a>
                     </div>
                 </div>
+                @include('layouts.notifications');
+                <a href="#" class="item ui blue" onclick="notifications.displayMessage()">
+                    <label style="margin:10px;" id="_message">0</label>
+                    <i style="font-size:30px;position:absolute;color:red;" class="comment outline icon"></i>&nbsp;
+                </a>
             @endif
         </div>
     </div>
@@ -108,6 +112,20 @@
             </div>
         </div>
         <div class="two wide column">
+            @can('is_admin', Auth::user())
+                <div id="message" style="margin-top : 20%;z-index:9999999;display:none;">
+                    <div class="field">
+                        <img id="user-bet" src="{{ asset('images/man.png') }}" width="50" height="50"/>
+                        <label class="msg-content"></label>
+                    </div>
+                </div>
+            @else
+                <div id="messageToUser" style="margin-top : 20%;z-index:9999999;">
+                    <div class="field">
+                        <label class="alert alert-info msg-user-content"></label>
+                    </div>
+                </div>
+            @endcan
         </div>
     </div>
 </div>    
@@ -137,6 +155,8 @@
 <script src="{{ asset('js/app.js') }}"></script>
 <script src="{{ asset('js/semantic.min.js') }}"></script>
 <script src="{{ asset('js/jqx-all.js') }}"></script>
+<script src="{{ asset('js/jquery.lazyload.js') }}"></script>
+<script src="https://cdn.socket.io/socket.io-1.3.4.js"></script>    
 <script src="https://maps.googleapis.com/maps/api/js?json?&mode=transit&origin=frontera+el+hierro&destination=la+restinga+el+hierro&departure_time=1399995076&key=AIzaSyBY2xnVxwjLYhuBNmhiMDUExm-vpUBa-IY&&libraries=places&callback=app.initMap"p
          async defer></script>
 </body>

@@ -5,19 +5,15 @@
 	@include('layouts.result')
 	@if(isset($match))
 	{{ Form::open(['method' => 'PUT','route' => ['admin.matches.update', $match->id], 'class' => 'ui segment form', 'name' => 'match-update-form']) }}
-	<div class="ui segment">
 		<h4 class="ui dividing blue header">Events List</h4>
 		<div id="events_list"></div>
 		<input type="hidden" name="events_data"/>
 		@include('layouts.menu', ['id' => 'menu-events'])	
-	</div>
 	@else
-	{{ Form::open(['route' => 'admin.matches.store', 'method' => 'post', 'class' => 'ui segment form', 'name' => 'match-create-form']) }}
+		{{ Form::open(['route' => 'admin.matches.store', 'method' => 'post', 'class' => 'ui segment form', 'name' => 'match-create-form']) }}
 	@endif
-	<div class="ui segment">
-		<h4 class="ui dividing blue header">Team List</h4>
-		<div id="team_list"></div>
-	</div>
+	<h4 class="ui dividing blue header">Team List</h4>
+	<div id="team_list"></div>
 	
 	  <h4 class="ui dividing blue header">Match Information</h4>
 	  <div class="field">
@@ -32,7 +28,7 @@
 					      		<label>{{ $home->name }}</label>
 					      	@endif
 					    </div>
-					    {{ Form::input('hidden', null, null, ['name' => 'home_id']) }}
+					    <input type="hidden" name="home_id" value="{{ $home->id }}"/> 
 		       		</div>
 		       		<div class="four wide field">
 		       		{{ Form::input('number', null, null, ['name' => 'home_goal']) }}
@@ -52,7 +48,7 @@
 					      		<label>{{ $guest->name }}</label>
 					      	@endif
 					    </div>
-		       			{{ Form::input('hidden', null, null, ['name' => 'guest_id']) }}
+		       			<input type="hidden" name="guest_id" value="{{ $guest->id }}"/> 
 		       		</div>
 		       </div>
 	      	</div>
@@ -67,7 +63,7 @@
 	      </div>
 	      <div class="field">
 	      	<label>Result</label>
-	        <input type="text" name="result" value="{{ isset($match) ? $match->result : '' }}">
+	        <input type="text" name="result" value="{{ isset($match) ? $match->result : '' }}" disabled>
 	      </div>
 	    </div>
 	  </div>
@@ -83,7 +79,7 @@
 	      	<div class="two fields">
 	      		<div class="twelve wide field">
 	      			<input type="text" name="address" placeholder="Location" value="{{ isset($match) ? $match->location : ''}}" disabled>
-	      			<input type="hidden" name="location">
+	      			<input type="hidden" name="location" value="{{ isset($match) ? $match->location : ''}}">
 	      		</div>
 	      		<div class="four wide field">
 	      			<img onclick="(function(){$('#window').jqxWindow('open');

@@ -3,60 +3,57 @@
 @section('content')
 <div class="container page-content">
     <div class="row">
+    	<div class="ui form">
+    		<div class="field">
+    			<div class="two fields">
+    				<div class="field">
+    					<h2 class="ui header blue">News List</h2>
+    				</div>
+    				<div class="field">
+    					<div class="ui blue circle">
+    						<i class="plus icon"></i> Add News
+    					</div>
+    					<div class="ui teal circle">
+    						<i class="edit icon"></i> Update News
+    					</div>
+    					<div class="ui red circle">
+    						<i class="trash icon"></i> Delete News
+    					</div>
+    				</div>
+    			</div>
+			</div>
+    	</div>
 			<div class="ui items">
-			  <div class="item">
-			    <div class="image">
-			      <img src="{{ asset('images/mourinho.jpg') }}">
-			    </div>
-			    <div class="content">
-			      <a class="header">HOT</a>
-			      <div class="meta">
-			        <span>Mourinho signed to coach for Manchester United...</span>
-			      </div>
-			      <div class="description">
-			       	<div class="ui star rating" data-rating="3"></div>
-			      </div>
-			      <div class="extra">
-			        <button class="ui facebook button" 
-			        onclick="(function(){$('.ui.modal').modal('show')}())">
-			        	<i class="facebook icon"></i>
-			        	Share
-			        </button>
-			        <button class="ui facebook button" 
-			         onclick="(function(){$('.ui.modal').modal('show')}())">
-			        	<i class="thumbs outline up icon"></i>
-			        	Like
-			        </button>
-			      </div>
-			    </div>
-			  </div>
-			  <div class="item">
-			    <div class="image">
-			     <img src="{{ asset('images/transfer.jpg') }}">
-			    </div>
-			    <div class="content">
-			      <a class="header">HOT!!</a>
-			      <div class="meta">
-			        <span>Luis Suarez has moved to FC Barcelona today,.....</span>
-			      </div>
-			      <div class="description">
-			        <div class="ui star rating" data-rating="3"></div>
-			      </div>
-			      <div class="extra">
-			        <button class="ui facebook button" 
-			        onclick="(function(){$('.ui.modal').modal('show')}())">
-			        	<i class="facebook icon"></i>
-			        	Share
-			        </button>
-			        <button class="ui facebook button" 
-			         onclick="(function(){$('.ui.modal').modal('show')}())">
-			        	<i class="thumbs outline up icon"></i>
-			        	Like
-			        </button>
-			      </div>
-
-			    </div>
-			  </div>
+			@if(isset($news))
+				@foreach($news as $n)
+					  <div class="item ticky">
+				    	<div class="image lazy" data-original="{{ $n->image ? $n->image : asset('images/football-wp.jpg') }}" onclick="news.showDetail(&#39;{{ route('admin.news.show', ['news' => $n->id]) }}&#39;)">
+					     	<img src="{{ $n->image ? $n->image : asset('images/football-wp.jpg') }}">
+					    </div>
+					    <div class="content">
+					      <a class="header">{{ $n->title }}</a>
+					      <div class="meta">
+					        <span>{{ $n->content }}</span>
+					      </div>
+					      <div class="description">
+					       	<div class="ui star rating" data-rating="3"></div>
+					      </div>
+					      <div class="extra">
+					        <button class="ui facebook button" 
+					        onclick="(function(){$('.ui.modal').modal('show')}())">
+					        	<i class="facebook icon"></i>
+					        	Share
+					        </button>
+					        <button class="ui facebook button" 
+					         onclick="(function(){$('.ui.modal').modal('show')}())">
+					        	<i class="thumbs outline up icon"></i>
+					        	Like
+					        </button>
+					      </div>
+					    </div>
+					  </div>
+				@endforeach
+			@endif	
 			</div>
 			<div class="ui modal segment">
 				<div class="ui comments">

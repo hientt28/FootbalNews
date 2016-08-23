@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Repositories\Match\MatchRepository;
+use LRedis;
+
 class MatchController extends Controller
 {
     protected $matchRepository;
@@ -18,7 +20,7 @@ class MatchController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $matches = [];
         $datafields = [
@@ -43,14 +45,33 @@ class MatchController extends Controller
             'start' => \Carbon\Carbon::now(),
         ]);*/
 
-
         if(app('request')->ajax()) {
             $matches = $this->matchRepository->all();
+            $teams = $this->matchRepository->team->all();
+            $flag = $request->input('sendNotification');
+            $resultBet = true;
+            if ($flag) {
+                $dataBet = $request->all();
+                $user = auth()->user();
+                $resultBet = $this->matchRepository->createOrUpdateBet($dataBet);
+                if ($resultBet) {
+                    $redis = LRedis::connection();
+                    $data = app()->make('stdClass');
+                    $data->user_id = $user->id;
+                    $data->user_name = $user->name;
+                    $data->avatar = $user->avatar;
+                    $redis->publish('message', json_encode($data));
+                }
+            } else {
+                $resultBet = false;
+            }
+
             return response()->json([
                 'datafields' => $datafields,
                 'records' => $matches,
-                200,
-                'status' => 'OK',   
+                'teams' => $teams,
+                'status' => 'OK',  
+                'resultBet' => $resultBet, 
             ]);
         }
 
@@ -61,8 +82,14 @@ class MatchController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+        if (app('request')->ajax()) {           
+            
+        
+            return view('admin.match.index');
+        }
+
         return view('admin.match.create');       
     }
     /**
