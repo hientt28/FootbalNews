@@ -20,6 +20,12 @@ Route::group(['middleware' => 'web'], function () {
             'as' => 'admin.welcome',
             'uses' => 'HomeController@welcome'
         ]);
+        Route::get('chart', [
+            'as' => 'admin.chart',
+            'uses' => 'HomeController@chart'
+        ]);
+        Route::resource('teams', 'Admin\TeamController');
+        Route::resource('players', 'Admin\PlayerController');
     });
     Route::group(['prefix' => 'users', 'namespace' => 'User'], function () {
         Route::get('/', [

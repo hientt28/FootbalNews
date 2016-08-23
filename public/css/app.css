@@ -407,3 +407,12 @@
     opacity: 0;
   }
 }
+
+ .img {
+   width: 100px;
+   height: 100px;
+ }
+ .imgDetails {
+   width: 200px;
+   height: 200px;
+ }
