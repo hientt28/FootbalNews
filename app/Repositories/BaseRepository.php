@@ -47,9 +47,14 @@ abstract class BaseRepository implements BaseRepositoryInterface
         return $this->model->paginate($limit);
     }
 
-    public function create($data)
+    public function create($input)
     {
-        return $this->model->create($data);
+        $data = $this->model->create($input);
+        if (!$data) {
+            throw new Exception(trans('message.create_error'));
+        }
+
+        return $data;
     }
 
     public function updateById($inputs, $id)
@@ -74,16 +79,6 @@ abstract class BaseRepository implements BaseRepositoryInterface
         } catch (Exception $e) {
             DB::rollBack();
             throw $e;
-        }
-
-        return $data;
-    }
-
-    public function store($input)
-    {
-        $data = $this->model->create($input);
-        if (!$data) {
-            throw new Exception(trans('message.create_error'));
         }
 
         return $data;

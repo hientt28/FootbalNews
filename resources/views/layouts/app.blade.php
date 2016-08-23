@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ trans('app.app_name') }}</title>
 
@@ -12,6 +13,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700">
     <!-- Styles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://formvalidation.io/vendor/formvalidation/css/formValidation.min.css">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/semantic.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/jqx.base.css') }}" rel="stylesheet">
@@ -66,24 +68,44 @@
     </div>
 
     <div class="ui left vertical inverted labeled icon sidebar menu uncover">
-      <a class="item">
-        <i class="flag icon"></i>&nbsp;
-        {{ trans('app.league') }}
-      </a>
-      <a class="item">
-        <i class="linux icon"></i>&nbsp;
-        {{ trans('app.team') }}
-      </a>
        @can('is_admin', Auth::user())
-       <a class="item">
-            <i class="soccer icon"></i>&nbsp;
-            {{ trans('app.match') }}
-        </a>
+            <a class="item" href="{{ route('admin.leagues.index') }}">
+                <i class="flag icon"></i>&nbsp;
+                {{ trans('app.league') }}
+            </a>
+            <a class="item" href="{{ route('admin.seasons.index') }}">
+                <i class="flag icon"></i>&nbsp;
+                {{ trans('app.season') }}
+            </a>
+            <a class="item">
+                <i class="linux icon"></i>&nbsp;
+                {{ trans('app.team') }}
+            </a>
+            <a class="item">
+                <i class="soccer icon"></i>&nbsp;
+                {{ trans('app.match') }}
+            </a>
+            <a class="item">
+                <i class="flag icon"></i>&nbsp;
+                {{ trans('app.player') }}
+            </a>
+            <a class="item" href="{{ route('admin.awards.index') }}">
+                <i class="flag icon"></i>&nbsp;
+                {{ trans('app.award') }}
+            </a>
        @else
-        <a class="item" href="{{ route('users.matches.index') }}">
-            <i class="soccer icon"></i>&nbsp;
-            {{ trans('app.match') }}
-        </a>
+            <a class="item">
+                <i class="flag icon"></i>&nbsp;
+                {{ trans('app.league') }}
+            </a>
+            <a class="item">
+                <i class="linux icon"></i>&nbsp;
+                {{ trans('app.team') }}
+            </a>
+            <a class="item" href="{{ route('users.matches.index') }}">
+                <i class="soccer icon"></i>&nbsp;
+                {{ trans('app.match') }}
+            </a>
        @endcan
       
     </div>
@@ -112,6 +134,9 @@
 @endif
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+<script src="http://formvalidation.io/vendor/formvalidation/js/formValidation.min.js"></script>
+<script src="http://formvalidation.io/vendor/formvalidation/js/framework/bootstrap.min.js"></script>
 <script src="{{ asset('js/app.js') }}"></script>
 <script src="{{ asset('js/semantic.min.js') }}"></script>
 <script src="{{ asset('js/jqx-all.js') }}"></script>
