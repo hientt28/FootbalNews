@@ -8,7 +8,6 @@ return [
     'logout' => 'Logout',
     'go' => 'Go',
     'next' => 'Next',
-    'logout' => 'Logout',
     'register' => 'Register',
     'cancel' => 'Cancel',
     'remember' => 'Remember Me',

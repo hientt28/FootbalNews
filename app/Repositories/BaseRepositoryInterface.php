@@ -14,9 +14,7 @@ interface BaseRepositoryInterface
 
     public function paginate($limit);
 
-    public function create($data);
-
-    public function store($input);
+    public function create($input);
 
     public function updateById($inputs, $id);
 

@@ -407,3 +407,47 @@
     opacity: 0;
   }
 }
+
+.row {
+  margin-top: 5%;
+}
+
+ .fa-btn {
+   margin-right: 6px;
+ }
+
+ .form {
+   margin-top: 5%;
+ }
+
+ .data_list {
+   margin-top: 4%;
+ }
+
+ #tblData > thead > tr > th {
+   background-color: #1b6d85;
+   color: white;
+ }
+
+ #tblData > tbody > tr > td {
+   padding: 0;
+ }
+
+ .th_chk, .th_action, .td_action {
+   text-align: center;
+ }
+
+ .chk {
+   text-align: center;
+   width: 5%;
+ }
+
+ .logo_league_edit {
+   width: 230px;
+   height: 230px;
+ }
+
+ .logo_league {
+   width: 120px;
+   height: 120px;
+ }
