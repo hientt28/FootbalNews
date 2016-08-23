@@ -10,15 +10,30 @@
     					<h2 class="ui header blue">News List</h2>
     				</div>
     				<div class="field">
-    					<div class="ui blue circle">
-    						<i class="plus icon"></i> Add News
-    					</div>
-    					<div class="ui teal circle">
-    						<i class="edit icon"></i> Update News
-    					</div>
-    					<div class="ui red circle">
-    						<i class="trash icon"></i> Delete News
-    					</div>
+	    				<a class="ui animated blue button" tabindex="0" href="{{ url('') }}">
+						  	<div class="hidden content"><i class="plus icon"></i></div>
+						  	<div class="visible content">
+						    	<i class="plus icon"></i>
+						  	</div>
+						</a>
+						<div class="ui vertical teal animated button" tabindex="0">
+						  	<div class="hidden content">
+						  		<i class="edit icon"></i>
+						  		Update News
+					  		</div>
+						  	<div class="visible content">
+						    	<i class="edit icon"></i>
+						  	</div>
+						</div>
+						<div class="ui vertical red animated button" tabindex="0">
+						  	<div class="hidden teal content">
+						  		<i class="trash icon"></i>
+						  		Delete News
+					  		</div>
+						  	<div class="visible content">
+						    	<i class="trash icon"></i>
+						  	</div>
+						</div>
     				</div>
     			</div>
 			</div>
