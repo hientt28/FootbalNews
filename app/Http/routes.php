@@ -17,19 +17,40 @@ Route::group(['middleware' => 'web'], function () {
     ]);
     Route::group(['prefix' => 'admin', 'namespace' => 'Admin',
         'middleware' => 'auth'], function () {
+        /*ajax request*/    
         Route::get('/', [
             'as' => 'admin.welcome',
             'uses' => 'AdminController@welcome'
         ]);
+        Route::post('/getTotalNotification', [
+            'as' => 'getTotalNotification',
+            'uses' => 'AdminController@getTotalNotification'
+        ]);
+        Route::post('/getListNotifications', [
+            'as' => 'getListNotifications',
+            'uses' => 'AdminController@getListNotifications'
+        ]);
+        /*************/
+
         Route::resource('news', 'NewsController');
         Route::resource('matches', 'MatchController');
     });
     Route::group(['prefix' => 'users', 'namespace' => 'User', 
         'middleware' => 'auth'], function () {
+        /*ajax request*/    
         Route::get('/', [
             'as' => 'users.welcome',
             'uses' => 'UserController@welcome'
         ]);
+        Route::post('/getTotalNotification', [
+            'as' => 'getTotalNotification',
+            'uses' => 'UserController@getTotalNotification'
+        ]);
+        Route::post('/getListNotifications', [
+            'as' => 'getListNotifications',
+            'uses' => 'UserController@getListNotifications'
+        ]);
+        /**************/
         Route::resource('news', 'NewsController');
         Route::resource('matches', 'MatchController', ['only' => ['index', 'show']]);
     });

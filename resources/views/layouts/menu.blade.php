@@ -4,8 +4,10 @@
         <li type="add"><i class="plus icon"></i>Add New Row</li>
         <li type="edit"><i class="edit icon"></i>Edit Selected Row</li>
         <li type="delete"><i class="trash icon"></i>Delete Selected Row</li>
+        @else
         <li type="bet" onclick="app.betMatch('jqxgrid')">
-            <i class="dollar icon"></i>Bet a Match</li>
+            <i class="dollar icon"></i>Bet a Match
+        </li>
         @endcan
         <li type="show"><i class="arrow circle right icon"></i> Show Row Detail</li>
         <li type="map" 

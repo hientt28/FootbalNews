@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Models\UserMatch;
+use App\Models\Match;
 
 class User extends Authenticatable
 {
@@ -30,6 +32,15 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public function isAdmin()
+    {
+        if ($this->role == config('common.roles.admin')) {
+            return true;
+        } 
+
+        return false;
+    }
+
     public function news()
     {
         return $this->hasMany(News::class);
@@ -50,7 +61,7 @@ class User extends Authenticatable
         return $this->hasMany(Notification::class);
     }
 
-    public function userMatches()
+    public function userMatch()
     {
         return $this->hasMany(UserMatch::class);
     }

@@ -1,8 +1,80 @@
 var app = (function () {
     var map = {};
+
+    var utils = new function(){
+        this.search = function (arr, key, value) {
+            for (var k in arr) {
+                if(arr[k]['' + key] == value)
+                    return arr[k];
+            }
+
+            return null; 
+        }
+
+        Number.prototype.formatMoney = function(c, d, t){
+            var n = this, 
+                c = isNaN(c = Math.abs(c)) ? 2 : c, 
+                d = d == undefined ? "." : d, 
+                t = t == undefined ? "," : t, 
+                s = n < 0 ? "-" : "", 
+                i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "", 
+                j = (j = i.length) > 3 ? j % 3 : 0;
+               return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+         };
+
+    }
+
+    var resetLocal = function () {
+        localStorage.removeItem('rate')
+        localStorage.removeItem('teams');
+    }
+
     var bindEvent = function () {
+        resetLocal();
+        
+        var form = $('form[name="form-bet"]');
+        if(form.length > 0) {
+            $('form[name="form-bet"]').jqxValidator({
+                     animation: 'none',
+                     rules: [{
+                         input: '#team-guess',
+                         message: 'Team guess is required!',
+                         action: 'blur',
+                         rule: function (input){
+                            var val = input.val();
+                            if(!val)
+                                return false
+                            return true;
+                         },
+                        position : 'topcenter'
+                     }, {
+                        input: '#result',
+                        message: 'result',
+                        action: 'blur',
+                        rule: function (input){
+                            var val = input.val();
+                            if(!val)
+                                return false
+                            return true;
+                        },
+                        position : 'topcenter'
+                     }, {
+                         input: '#price',
+                         message: 'Price is required',
+                         action: 'blur',
+                         rule: function (input){
+                            var val = input.val();
+                            if(!val)
+                                return false
+                            return true;
+                         },
+                         position : 'topcenter'
+                     }]
+             });
+        }
+
         $('.toggle').on('click', function() {
-          $('.login-form').stop().addClass('active');
+            $('.login-form').stop().addClass('active');
         });
 
         $('.close').on('click', function() {
@@ -14,7 +86,7 @@ var app = (function () {
             maxRating: 4
         });
 
-        $('form[name="match-update-form"]').submit(function(e){
+        $('form[name="match-update-form"], form[name="form-bet"]').submit(function(e){
                 e.preventDefault();
                 return false;
         });   
@@ -29,8 +101,46 @@ var app = (function () {
             form.submit();
         });
 
-        $('button[name="bet-match"]').on('click', function (){
+        $('#usermatchWindow').on('close', function(){
+             $('form[name="form-bet"]').jqxValidator('hide');
+        })
 
+        $('#price').on('change', function(){
+            var rate = localStorage.getItem('rate');
+            var price = $('#price').val();
+            var bonus = rate > 0 ? rate*price : price;
+            $('.bonus').text(bonus.formatMoney(2, '.', ',') + ' d');
+        })
+
+        $('button[name="bet-match"]').on('click', function (){ 
+            var flag = $('form[name="form-bet"]').jqxValidator('validate');
+            if(!flag)
+                return;
+            
+            $.ajax({
+                type : 'GET',
+                data : {
+                    sendNotification : true,
+                    teamGuess : $('#team-guess').val(),
+                    result : $('#result').val(),
+                    price : $('#price').val(),
+                    matchId : $('#match_bet').attr('matchId')
+                },
+                beforeSend:function(){
+                    $('form[name="form-bet"]').addClass('ui loading form');
+                }
+            }).done(function(res) {
+                $('form[name="form-bet"]').removeClass('ui loading form');
+                if(res.resultBet) {
+                    $("#result-bet").jqxNotification({template : 'info'});
+                    $("#result-bet").text('Bet Match Successfully!');
+                    $("#result-bet").jqxNotification('open');
+                } else {
+                    $("#result-bet").jqxNotification({template : 'error'});
+                    $("#result-bet").text('Bet Match Error!');
+                    $("#result-bet").jqxNotification('open');
+                }
+            })
         });
       
         $.ajaxSetup({
@@ -40,10 +150,45 @@ var app = (function () {
         });
 
         var socket = io.connect('http://localhost:8890');
-            socket.on('message', function (data) {
-                alert(data);
-                    /*$('#notifications').jqxNotification();*/
-            });
+        socket.on('message', function (data) {
+            var msg = $('#message');
+            try {
+                data = $.parseJSON(data);
+            } catch(e) {
+                if(data.indexOf('admin')) {
+                     $('.msg-user-content').text('Admin has close match!'); 
+                     $('#messageToUser').jqxNotification('open');
+                }
+            }
+            
+            if(data.avatar) {
+                $('#user-bet').attr('src', data.avatar);
+            }
+
+            $('.msg-content').text('User ' + (data.user_name ? data.user_name : '') + ' bet a match'); 
+            var totalMsg = parseInt($('#_message').text());
+            if(typeof totalMsg != NaN) {
+                $('#_message').text(++totalMsg);
+            }               
+            msg.jqxNotification('open');
+        });
+
+        getTotalNotification();
+    }
+
+     var getTotalNotification = function () {
+        $.ajax({
+            url : 'getTotalNotification',
+            type : 'POST', 
+            beforeSend : function(){
+                $('#_message').addClass('ui loading form');
+            }
+        }).done(function(res) {
+            if(res.total) {
+                $('#_message').removeClass('ui loading form');
+                $('#_message').text(res.total);
+            }
+        });
     }
 
     var initMap = function() {
@@ -224,7 +369,8 @@ var app = (function () {
         viewLocation : viewLocation,
         betMatch : betMatch,
         getDirections : getDirections,
-        initMapWindow : initMapWindow
+        initMapWindow : initMapWindow,
+        utils : utils
     }
 } ())
 
@@ -255,9 +401,12 @@ var gridBuilder = new function() {
             if(k == 'rate') {
                 column.cellsformat = 'p'
             }
-            if(k == 'time') {
+            if(k == 'time' || k == 'created_at') {
                 column.columntype = 'datetimeinput';
                 column.cellsformat = 'dd-MMMM-yyyy hh:mm:ss';
+            }
+            if(k == 'message') {
+                column.width = '30%';
             }
             columns.push(column);   
         }
@@ -268,15 +417,19 @@ var gridBuilder = new function() {
     this.setDropDownList = function(obj, objHidden, source, config) {
         var valDefault = $(objHidden).val();
         var _cf =  {   source : source, 
-                    width : config.width ? config.width : '325px', 
-                    height : config.height ? config.height : '35px',
+                    width : config && config.width ? config.width : '325px', 
+                    height : config && config.height ? config.height : '35px',
                     renderer: function (index, label, value) 
                     {
                         var datarecord = source[index];
+                        if(datarecord == null)
+                            return;
+
                         if(datarecord.value && datarecord.description) {
                              return '<img src="' + datarecord.logo +'" width="30" height="30"/> ' + datarecord.description ;
+                         } else if(datarecord.id && datarecord.name) {
+                                return datarecord.name;
                          }
-
                        return value;
                     },
                     selectionRenderer: function (htmlString) 
@@ -293,18 +446,44 @@ var gridBuilder = new function() {
                     autoDropDownHeight : true,
                     theme : 'ui-redmond'
                 }
-                if(config.value != null ) {
+                if(config && config.value != null ) {
                     _cf.valueMember = config.value;
                 }
-                $(obj).jqxDropDownList(_cf);
+                
                 try {
                     if(obj != null) {
+                        $(obj).jqxDropDownList(_cf);
                         valDefault ? $(obj).jqxDropDownList('val', valDefault) : ''; 
                     }
                 } catch(e) {
                     console.log(e);
                 }
             
+    }
+
+    this.initFormBet = function (match) {
+        var teams = localStorage.getItem('teams');
+        teams = teams != 'undefined' ? $.parseJSON(teams) : [];
+        localStorage.setItem('rate', match.rate);
+        if(match != null && teams != null) {
+            var home = app.utils.search(teams, 'id', match.home_id);
+            var guest = app.utils.search(teams, 'id',match.guest_id);
+            var data = [];
+            if(guest != null && home != null) {
+                data.push({value : home.id,description : home.name, logo : home.logo});
+                data.push({value : guest.id,description : guest.name, logo : guest.logo});
+                $('#match_bet').html(home.name + '-' + guest.name);
+                $('#match_bet').attr('matchId', match.id);
+            }
+        }
+        this.setDropDownList($('#result'), null, ['Win', 'Lose', 'Draw'], {width : '225px', height : '25px', value : null});
+        this.setDropDownList($('#team-guess'), null, data, {width : '225px', height : '25px'});
+        $('#price').jqxNumberInput({theme : 'ui-redmond', width: '225px', height: '25px', spinButtons: true });
+        $("#result-bet").jqxNotification({
+                width: 500, opacity: 0.9,appendContainer : '#result-bet-container',
+                autoOpen: false, animationOpenDelay: 800, autoClose: true, 
+                autoCloseDelay: 1000, template: "info",
+        });
     }
 
     this.contextMenu = function (grid, config, callback) {    
@@ -387,12 +566,30 @@ var gridBuilder = new function() {
             rowdata
          ) {
             var data = grid.jqxGrid('getrowdata', row);
+            var teams = localStorage.getItem('teams');
+            var teams = teams != 'undefined' ? $.parseJSON(teams) : [];
             if (data.end && columnproperties.datafield == 'result') {
                 return '<span style="margin: 4px; float: ' + columnproperties.cellsalign + '; color: #ff0000;">' + value + '</span>';
             } else if(columnproperties.datafield == 'logo') {
                 return '<img src="' + data.logo + '" width="100%" height="100%" />'
+            } else if(columnproperties.datafield == 'home_id') {
+                var home = app.utils.search(teams, 'id', data.home_id);
+                home = home ? home : {logo : '', name : 'test'}
+                return '<span style="margin: 4px;"><img src="' + home.logo +'" width="20px" height="20px"/> ' + home.name + '</span>';
+            } else if(columnproperties.datafield == 'guest_id') {
+                var guest = app.utils.search(teams, 'id', data.guest_id);
+                guest = guest ? guest : {logo : '', name : 'test'}
+                return '<span style="margin: 4px;"><img src="' + guest.logo +'" width="20px" height="20px"/> ' + guest.name + '</span>';
+            } else if(columnproperties.datafield == 'user_id') {
+                return '<span style="margin: 4px;">' + data.user_name + '</span>';
+            } else if(columnproperties.datafield == 'status') {
+                if(data.status == 0)
+                    return '<span style="margin: 4px;">' + 'Not Watch' + '</span>';
+                else 
+                    return '<span style="margin: 4px;">' + 'Watched' + '</span>';
+            } else if(columnproperties.datafield == 'created_at') {
+                return '<span style="margin: 4px;">' + data.created_at.time + '</span>';
             }
-
             return '<span style="margin: 4px; float: ' + columnproperties.cellsalign + ';">' + value + '</span>';
         }
 
@@ -414,7 +611,7 @@ var gridBuilder = new function() {
                         autorowheight: true,   
                         showfilterrow : true,
                         sortable: true,
-                        editable : false,
+                        editable : configMenu && configMenu.editable ? configMenu.editable : false,
                         editmode : 'dblclick',
                         altrows: true,
                         filterable: true,
@@ -516,6 +713,7 @@ var gridBuilder = new function() {
 
 var matches = (function () {
     var container = $('#Menu');
+    var _teams = [];
     if(!container) {
         return;
     }
@@ -531,6 +729,7 @@ var matches = (function () {
             var matches = res.records;
             var datafields = res.datafields;
             var leagues = res.leagues;
+            localStorage.setItem('teams', JSON.stringify(res.teams));
             this.setConfig(datafields, matches);
             this.setDatafields(
                 [
@@ -560,18 +759,28 @@ var matches = (function () {
                         window.location.href = "matches/create";
                     } else if(content == "Bet a Match") {
                         $('#usermatchWindow').jqxWindow('open');
-                        localStorage.setItem('match-select', JSON.stringify(row));
+                        this.initFormBet(row);
                     }
-                }    
+                }.bind(this)    
             );
+            var msg = $("#message");
+            if(msg.length > 0) {
+                $("#message").jqxNotification({
+                    width: 250, position: "top-right", opacity: 0.9,
+                    autoOpen: false, animationOpenDelay: 800, autoClose: false, 
+                    autoCloseDelay: 5000, template: "info",
+                });
+            }
+            
+            msg = $("#messageToUser");
+             if(msg.length > 0) {
+                $("#messageToUser").jqxNotification({
+                    width: 250, position: "top-right", opacity: 0.9,
+                    autoOpen: false, animationOpenDelay: 800, autoClose: false, 
+                    autoCloseDelay: 5000, template: "info",
+                });
+             }
         }.bind(this));
-    }.bind(this);
-
-    var initFormBet = function () {
-
-        this.setDropDownList($('#result'), null, ['Win', 'Lose', 'Draw'], {width : '225px', height : '25px', value : null});
-        this.setDropDownList($('#team-guess'), null, [], {width : '225px', height : '25px'});
-        $('#price').jqxNumberInput({theme : 'ui-redmond', width: '225px', height: '25px', spinButtons: true });
     }.bind(this);
 
     var initFormCreate  = function () {
@@ -617,7 +826,7 @@ var matches = (function () {
                 ]
             );
 
-            this.initGrid($('#events_list'), {menu : $('#menu-events'),height : '106px',width : '160px'}, 
+            this.initGrid($('#events_list'), {menu : $('#menu-events'), editable : true,height : '106px',width : '160px'}, 
                 function (grid, event) {
                     var args = event.args;
                     var rowindex = grid.jqxGrid('getselectedrowindex');
@@ -653,7 +862,6 @@ var matches = (function () {
 
     var run = function () {
         getList();
-        initFormBet();
         app.initMapWindow($('input[name="address"]'), $('#window'));
         initFormCreate();
     }
@@ -661,7 +869,68 @@ var matches = (function () {
     return run();
 }).bind(gridBuilder);
 
-$(document).ready(function(){
-	app.bindEvent();
+
+var notifications = new function () {
+    this.initNotificationsList = function (data) {
+        if(data) {
+            this.setConfig(data.datafields, data.notifications);
+            this.setDatafields(
+                [
+                    { name: 'id', type: 'int' },
+                    { name: 'message', type: 'string' },
+                    { name: 'status', type: 'string' },
+                    { name: 'user_id', type: 'string' },
+                    { name: 'user_name', type: 'string' },
+                    { name: 'create_at', type: 'datetime' },
+                ]
+            );
+
+            this.initGrid($('#notifications-list'), {}, null);
+            var _window = $('#notifications-window');
+            var offset = $('.ui.segment.content').offset();
+            _window.jqxWindow({
+                position: { x: offset.left + 50, y: offset.top + 50} ,
+                theme : 'ui-redmond',
+                showCollapseButton: true, maxHeight: 800, maxWidth: 1000, minHeight: 200, minWidth: 200, height: 500, width: 740,
+                initContent: function () {
+                    _window.jqxWindow('focus');
+                }
+            }); 
+            _window.jqxWindow('open');
+        }
+
+    }.bind(gridBuilder);
+
+    this.displayMessage = function(callback) {
+        $.ajax({
+            url : 'getListNotifications',
+            type : 'POST', 
+        }).done(function(res) {
+            if(res.notifications) {
+                this.initNotificationsList(res);
+            }
+        }.bind(this));
+    }
+}
+
+var news = new function() {
+    this.showDetail = function (url) {
+        window.location.href = url;
+    }
+
+    this.lazyload = function () {
+        var obj = $('.image.lazy');
+        if(obj.length > 0) {
+            obj.lazyload({
+                effect : "fadeIn",
+                event : "scroll filter"
+            });
+        }
+    }
+}
+
+$(document).on('ready page:load', function(){
+    app.bindEvent();
+    news.lazyload();
     matches();
-});
+})

@@ -8,3 +8,8 @@
         <i class="warning circle icon"></i>&nbsp;{{ $error }}
     </div>
 @endif
+@if(isset($status) && is_string($status))
+    <div class="alert alert-info">
+        <i class="checkmark icon"></i>&nbsp;{{ $status }}
+    </div>
+@endif

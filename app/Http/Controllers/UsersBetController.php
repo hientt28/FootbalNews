@@ -21,6 +21,7 @@ class UsersBetController extends Controller
     public function sendMessage(){
         $redis = LRedis::connection();
         $redis->publish('message', Request::input('message'));
+        
         return redirect('writemessage');
     }
 }

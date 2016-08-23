@@ -50,9 +50,11 @@ class MatchController extends Controller
 
         if(app('request')->ajax()) {
             $matches = $this->matchRepository->all();
+            $teams = $this->matchRepository->team->all();
             return response()->json([
                 'datafields' => $datafields,
                 'records' => $matches,
+                'teams' => $teams,
                 200,
                 'status' => 'OK',   
             ]);
@@ -129,7 +131,6 @@ class MatchController extends Controller
     {
         $message = trans('message.match.create');
         $data = $request->all();
-
         try {
             $this->matchRepository->create($data);
         } catch (Exception $e) {
@@ -200,13 +201,33 @@ class MatchController extends Controller
         $message = trans('message.match.update');
         $data = $request->all();
         try { 
+            if (app('request')->ajax()) {
+                $events = $this->matchRepository->event->whereMatchId($id)->get();
+                $data = $this->getDataAjax();
+                if ($events != null) {
+                    $data['datafields_events'] = [
+                        'id' => 'Id',
+                        'content' => 'Content',
+                        'time' => 'Time',
+                    ];
+                    $data['events'] = $events;
+                }
+                
+                return response()->json($data);
+            }
+
             $this->matchRepository->updateMatch($data, $id);
                
         } catch (Exception $e) {
             $message = $e->getMessage();
         }
+        $match = $this->matchRepository->find($id);
+        $home = $this->matchRepository->team->find($match->home_id);
+        $guest = $this->matchRepository->team->find($match->guest_id);
+        $result = compact('match', 'home', 'guest');
+        $result['status'] = $message;
 
-        return back()->withSuccess($message);
+        return redirect(route('admin.matches.edit',['matches' => $id]))->with($result);
     }
 
     /**
@@ -237,7 +258,6 @@ class MatchController extends Controller
             'datafields' => $datafields,
             'records' => $teams,
             'leagues' => $leagues,
-            200,
             'status' => 'OK',   
         ];
         

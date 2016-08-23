@@ -9,14 +9,22 @@ io.on('connection', function (socket) {
   console.log("new client connected");
   var redisClient = redis.createClient();
   redisClient.subscribe('message');
+  var redisServer = redis.createClient();
+   redisServer.subscribe('messageToUser');
 
   redisClient.on("message", function(channel, message) {
     console.log("mew message in queue "+ message + "channel");
     socket.emit(channel, message);
   });
 
+  redisServer.on("messageToUser", function(channel, message) {
+    console.log("mew message in queue "+ message + "channel");
+    socket.emit(channel, message);
+  });
+
   socket.on('disconnect', function() {
     redisClient.quit();
+    redisServer.quit();
   });
 
 });

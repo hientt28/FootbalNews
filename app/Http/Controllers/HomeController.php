@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use App\Http\Requests;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 class HomeController extends Controller
 {
@@ -26,7 +27,14 @@ class HomeController extends Controller
     {
         return view('welcome');
     }
-    public function abc() {
-        return 'aaaaaa';
+    public function getTotalNotification() {
+        $total = 0;   
+        try {
+            $total = Notification::count();
+        } catch(Exception $e) {
+            $total = 0;
+        }
+
+        return response()->json(['total' => $total, 'status' => 'OK']);
     }
 }
