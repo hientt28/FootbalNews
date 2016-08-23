@@ -61,8 +61,12 @@ class MatchController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+        if (app('request')->ajax()) {           
+            dd($request->all());
+        }
+
         return view('admin.match.create');       
     }
     /**

@@ -8,6 +8,9 @@
         <div id="jqxgrid"></div>
         @include('layouts.map')
         @include('layouts.menu', ['id' => 'Menu'])
+        @can('is_admin', Auth::user())
+        	@include('user.match.usermatch')
+        @endcan
 	   @yield('grid')
     </div>		
 

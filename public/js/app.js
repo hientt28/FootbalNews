@@ -28,12 +28,22 @@ var app = (function () {
             form.unbind('submit');
             form.submit();
         });
+
+        $('button[name="bet-match"]').on('click', function (){
+
+        });
       
         $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+
+        var socket = io.connect('http://localhost:8890');
+            socket.on('message', function (data) {
+                alert(data);
+                    /*$('#notifications').jqxNotification();*/
+            });
     }
 
     var initMap = function() {
@@ -178,22 +188,23 @@ var app = (function () {
         return pos;
     }
 
-     var initMapWindow = function(_grid){
+    var initMapWindow = function(_grid, menu){
         var jqxWidget = _grid;
         var offset = jqxWidget.offset();    
-        $('#window').jqxWindow({
+        menu.jqxWindow({
             position: { x: offset.left + 50, y: offset.top + 50} ,
             theme : 'ui-redmond',
             showCollapseButton: true, maxHeight: 400, maxWidth: 700, minHeight: 200, minWidth: 200, height: 300, width: 500,
             initContent: function () {
-                $('#window').jqxWindow('focus');
+                menu.jqxWindow('focus');
             }
-        });
+        }); 
+        menu.jqxWindow('open');
     }
 
     var viewLocation = function(_grid){
         var grid = $('#' + _grid);
-        initMapWindow(grid);
+        initMapWindow(grid, $('#window'));
         var index = grid.jqxGrid('getselectedrowindex');
         if(index != -1) {
             var row = grid.jqxGrid('getrowdata', index);
@@ -202,11 +213,18 @@ var app = (function () {
         }
     }
 
+    var betMatch = function(_grid){
+        var grid = $('#' + _grid);
+        initMapWindow(grid, $('#usermatchWindow'));
+    }
+
     return {
         bindEvent : bindEvent,
         initMap : initMap,
         viewLocation : viewLocation,
-        getDirections : getDirections
+        betMatch : betMatch,
+        getDirections : getDirections,
+        initMapWindow : initMapWindow
     }
 } ())
 
@@ -247,34 +265,45 @@ var gridBuilder = new function() {
         return columns;
     }
 
-    this.setDropDownList = function(obj, objHidden, source) {
+    this.setDropDownList = function(obj, objHidden, source, config) {
         var valDefault = $(objHidden).val();
-        $(obj).jqxDropDownList(
-            {   source : source, 
-                width : '325px', 
-                height :'35px',
-                renderer: function (index, label, value) 
-                {
-                    var datarecord = source[index];
-                    return '<img src="' + datarecord.logo +'" width="30" height="30"/> ' + datarecord.description ;
-                },
-                selectionRenderer: function (htmlString) 
-                {
-                    var item = $(obj).jqxDropDownList('getSelectedItem');
-                    if (item) {
-                        return "<b>" + source[item.index].description + "</b>";
+        var _cf =  {   source : source, 
+                    width : config.width ? config.width : '325px', 
+                    height : config.height ? config.height : '35px',
+                    renderer: function (index, label, value) 
+                    {
+                        var datarecord = source[index];
+                        if(datarecord.value && datarecord.description) {
+                             return '<img src="' + datarecord.logo +'" width="30" height="30"/> ' + datarecord.description ;
+                         }
+
+                       return value;
+                    },
+                    selectionRenderer: function (htmlString) 
+                    {
+                        var item = $(obj).jqxDropDownList('getSelectedItem');
+                        if(item != null ) {
+                            if (source[item.index] && source[item.index].description) {
+                                return "<b>" + source[item.index].description + "</b>";
+                            } else return '<b>' + item.label+ '</b>';
+                        }
+
+                        return "<b>Please Choose:</b>";
+                    },
+                    autoDropDownHeight : true,
+                    theme : 'ui-redmond'
+                }
+                if(config.value != null ) {
+                    _cf.valueMember = config.value;
+                }
+                $(obj).jqxDropDownList(_cf);
+                try {
+                    if(obj != null) {
+                        valDefault ? $(obj).jqxDropDownList('val', valDefault) : ''; 
                     }
-                    return "<b>Please Choose:</b>";
-                },
-                valueMember : 'id',
-                autoDropDownHeight : true,
-                theme : 'ui-redmond'
-            });
-            try {
-                valDefault ? $(obj).jqxDropDownList('val', valDefault) : ''; 
-            } catch(e) {
-                console.log(e);
-            }
+                } catch(e) {
+                    console.log(e);
+                }
             
     }
 
@@ -529,17 +558,27 @@ var matches = (function () {
                     }else if(content == "Add New Row") {
                         localStorage.setItem('action_form', 'create');
                         window.location.href = "matches/create";
+                    } else if(content == "Bet a Match") {
+                        $('#usermatchWindow').jqxWindow('open');
+                        localStorage.setItem('match-select', JSON.stringify(row));
                     }
                 }    
             );
         }.bind(this));
     }.bind(this);
 
+    var initFormBet = function () {
+
+        this.setDropDownList($('#result'), null, ['Win', 'Lose', 'Draw'], {width : '225px', height : '25px', value : null});
+        this.setDropDownList($('#team-guess'), null, [], {width : '225px', height : '25px'});
+        $('#price').jqxNumberInput({theme : 'ui-redmond', width: '225px', height: '25px', spinButtons: true });
+    }.bind(this);
+
     var initFormCreate  = function () {
         var grid = $('#team_list');
-        if(!grid) {
-            return;
-        }
+       /* if(!grid) {
+            return false;
+        }*/
         var action = localStorage.getItem('action_form');
         var url = action != null ? action : 'create';
         $.ajax({
@@ -612,23 +651,11 @@ var matches = (function () {
         })
     }.bind(this);
 
-    var initMapWindow = function(){
-        var jqxWidget = $('input[name="address"]');
-        var offset = jqxWidget.offset();    
-        $('#window').jqxWindow({
-            position: { x: offset.left + 50, y: offset.top + 50} ,
-            theme : 'ui-redmond',
-            showCollapseButton: true, maxHeight: 400, maxWidth: 700, minHeight: 200, minWidth: 200, height: 300, width: 500,
-            initContent: function () {
-                $('#window').jqxWindow('focus');
-            }
-        });
-    }
-
     var run = function () {
         getList();
+        initFormBet();
+        app.initMapWindow($('input[name="address"]'), $('#window'));
         initFormCreate();
-        initMapWindow();
     }
 
     return run();
