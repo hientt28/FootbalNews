@@ -30,9 +30,9 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    public function news()
+    public function posts()
     {
-        return $this->hasMany(News::class);
+        return $this->hasMany(Post::class);
     }
 
     public function comments()

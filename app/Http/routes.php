@@ -24,12 +24,19 @@ Route::group(['middleware' => 'web'], function () {
     Route::group(['prefix' => 'users', 'namespace' => 'User'], function () {
         Route::get('/', [
             'as' => 'users.welcome',
-            'uses' => 'UserController@index'
+            'uses' => 'UserController@welcome'
         ]);
         Route::resource('news', 'NewController');
         Route::resource('matches', 'MatchController', ['only' => ['index', 'show']]);
     });
-
+    // Route::get('login/{social}', [
+    //     'as' => 'login.{social}',
+    //     'uses' => 'SocialNetworkController@redirect'
+    // ]);
+    // Route::get('login/{social}/callback', [
+    //     'as' => 'login.{social}.callback',
+    //     'uses' => 'SocialNetworkController@callback'
+    // ]);
     Route::group(['prefix' => 'login'], function () {
         Route::get('social/{network}', [
             'as' => 'loginSocialNetwork',

@@ -4,14 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class SocialNetwork extends Model
+class UserMatch extends Model
 {
     protected $fillable = [
         'user_id',
-        'provider',
-        'provider_user_id',
-        'avatar',
+        'match_id',
+        'team_guess',
+        'result',
+        'price',
     ];
+    
+    public function match()
+    {
+        return $this->belongsTo(Match::class);
+    }
 
     public function user()
     {
