@@ -18,15 +18,19 @@
                                 <div class="dataTable_wrapper">
                                     <table class="table table-striped table-bordered table-hover" id="dataTables">
                                         <tr>
+                                            <td>{{ trans('team.logo') }}</td>
                                             <td>{!! Html::image($team->logo, null, ['class' => 'imgDetails']) !!}</td>
                                         </tr>
                                         <tr>
+                                            <td>{{ trans('team.name') }}</td>
                                             <td><h3>{{ $team->name }}</h3></td>
                                         </tr>
                                         <tr>
+                                            <td>{{ trans('team.country') }}</td>
                                             <td>{{ $team->country->name }}</td>
                                         </tr>
                                         <tr>
+                                            <td>{{ trans('team.desciption') }}</td>
                                             <td>{{ $team->description }}</td>
                                         </tr>
                                     </table>
