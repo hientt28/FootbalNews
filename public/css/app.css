@@ -394,6 +394,12 @@
     margin : 10% 0 0 2%;
 }
 
+#show_avatar {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+}
+
 /* Keyframes */
 @-webkit-keyframes buttonFadeInUp {
   0% {

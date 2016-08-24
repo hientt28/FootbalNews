@@ -49,7 +49,7 @@
                 @can('is_admin', Auth::user())
                     <a href="{{ route('admin.welcome') }}" class="item"><i class="newspaper icon"></i>&nbsp;{{ trans('app.new') }}</a>
                 @else
-                    <a href="{{ route('news.index') }}" class="item"><i class="newspaper icon"></i>&nbsp;{{ trans('app.new') }}</a>
+                    <a href="{{ route('users.news.index') }}" class="item"><i class="newspaper icon"></i>&nbsp;{{ trans('app.new') }}</a>
                 @endcan
                 
                 <div class="ui simple dropdown item">
@@ -58,7 +58,7 @@
                     <div class="menu">
                         <a class="item" href="{{ url('/logout') }}" class="ui inverted button"><i
                                     class="sign out icon"></i>&nbsp; {{ trans('login.logout') }}</a>
-                        <a class="item" href="{{ route('users.show', [Auth::user()->id]) }}"><i class="user icon"></i>&nbsp;{{ trans('app.profile') }}</a>
+                        <a class="item" href="{{ route('users.profile.show', [Auth::user()->id]) }}"><i class="user icon"></i>&nbsp;{{ trans('app.profile') }}</a>
                         <a class="item" href="#"><i class="flag outline icon"></i>&nbsp;{{ trans('app.languages') }}</a>
                     </div>
                 </div>
@@ -81,7 +81,7 @@
             {{ trans('app.match') }}
         </a>
        @else
-        <a class="item" href="{{ route('matches.index') }}">
+        <a class="item" href="{{ route('users.matches.index') }}">
             <i class="soccer icon"></i>&nbsp;
             {{ trans('app.match') }}
         </a>

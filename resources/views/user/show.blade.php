@@ -28,12 +28,6 @@
                             {!! Form::text('address', $user->address, ['class' => 'form-control','disabled']) !!}
                         </div>
                     </div>
-                    <div class="form-group">
-                        {!! Form::label('phone', trans('user.phone'), ['class' => 'col-md-3 control-label']) !!}
-                        <div class="col-md-6">
-                            {!! Form::text('phone', $user->phone, ['class' => 'form-control', 'disabled']) !!}
-                        </div>
-                    </div>
 
                     <div class="form-group">
                         {!! Form::label('avatar', trans('user.avatar'), ['class' => 'col-md-3 control-label']) !!}
@@ -43,7 +37,7 @@
                     </div>
                     <div class="form-group">
                         <div class="col-md-7 col-md-offset-3">
-                            <a class="btn btn-info" href="{{ route('users.edit', [$user->id]) }}">
+                            <a class="btn btn-info" href="{{ route('users.profile.edit', $user->id) }}">
                                 {{ trans('user.update_profile') }}
                             </a>
                         </div>

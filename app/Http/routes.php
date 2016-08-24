@@ -1,5 +1,4 @@
 <?php
-
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -10,36 +9,35 @@
 | and give it the controller to call when that URI is requested.
 |
 */
-
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Route::auth();
-
-Route::get('/home', 'HomeController@index');
-    
-
 Route::group(['middleware' => 'web'], function () {
-    Route::get('/' , ['as' =>'home', 'uses' => 'HomeController@index']);
-    Route::group(['middleware' => 'isUser'], function () {
-        Route::group(['namespace' => 'User'], function () {
-            Route::resource('news', 'NewController');
-            Route::resource('matches', 'MatchController', ['only' => ['index', 'show']]); 
-        });
-        Route::resource('users', 'UserController');
-    });
-    
-    Route::group(['prefix' => 'admin'], function () {
+    Route::get('/', [
+        'as' => '/',
+        'uses' => 'HomeController@index',
+    ]);
+    Route::get('register/verify/{confirmation_code}', [
+        'as' => 'user.active',
+        'uses' => 'Auth\AuthController@confirm'
+    ]);
+    // Route::group(['prefix' => 'admin'], function () {
+    //     Route::get('/', [
+    //         'as' => 'admin.welcome',
+    //         'uses' => 'HomeController@welcome'
+    //     ]);
+    //     Route::get('chart', [
+    //         'as' => 'admin.chart',
+    //         'uses' => 'HomeController@chart'
+    //     ]);
+    //     Route::resource('teams', 'Admin\TeamController');
+    //     Route::resource('players', 'Admin\PlayerController');
+    // });
+    Route::group(['prefix' => 'users', 'namespace' => 'User'], function () {
+        Route::resource('profile', 'UserController');
         Route::get('/', [
-            'as' => 'admin.welcome',
-            'uses' => 'HomeController@welcome'
+            'as' => 'users.profile.welcome',
+            'uses' => 'UserController@welcome'
         ]);
-    });
-    Route::group(['prefix' => 'users'], function () {
-        Route::get('home', [
-            'as' => 'home',
-            'uses' => 'HomeController@index'
-        ]);
+        Route::resource('news', 'NewController');
+        Route::resource('matches', 'MatchController', ['only' => ['index', 'show']]);
     });
 });

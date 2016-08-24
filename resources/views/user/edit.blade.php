@@ -6,7 +6,7 @@
             <div class="page-content-wrapper">
                 <h3 class="page-header"> {{ trans('user.edit_profile') }} </h3>
                 <div class="row">
-                    {!! Form::model($user, ['method' => 'PUT', 'route' => ['users.update', $user->id], 'class' => 'form-horizontal', 'files' => true]) !!}
+                    {!! Form::model($user, ['method' => 'PUT', 'route' => ['users.profile.update', $user->id], 'class' => 'form-horizontal', 'files' => true]) !!}
                         <div class="col-md-4 col-sm-6 col-xs-12">
                             <div class="text-center">
                                 {!! Form::image($user->avatar, null, ['id' => 'show_avatar']) !!}
@@ -34,14 +34,6 @@
                             </div>
 
                             <div class="form-group">
-                                {!! Form::label('phone', trans('user.phone'), ['class' => 'col-lg-3 control-label']) !!}
-                                <div class="col-lg-8 input-group">
-                                    <span class="input-group-addon"><i class="fa fa-mobile" aria-hidden="true"></i></span>
-                                    {!! Form::text('phone', $user->phone, ['class' => 'form-control']) !!}
-                                </div>
-                            </div>
-
-                            <div class="form-group">
                                 {!! Form::label('email', trans('user.email'), ['class' => 'col-lg-3 control-label']) !!}
                                 <div class="col-lg-8 input-group">
                                     <span class="input-group-addon"><i class="fa fa-envelope-o" aria-hidden="true"></i></span>
@@ -55,7 +47,7 @@
                                         'type' => 'submit',
                                         'class' => 'btn btn-primary btn-md'
                                     ]) !!}
-                                    {{ link_to_route('home', trans('user.cancel'), null, ['class' => 'btn btn-default']) }}
+                                    {{ link_to_route('/', trans('user.cancel'), null, ['class' => 'btn btn-default']) }}
                                 </div>
                             </div>
                         </div>

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\UpdateUserRequest;
@@ -28,9 +28,12 @@ class UserController extends Controller
      */
     public function index()
     {
-        return redirect()->route('home');
+        //return redirect()->route('home');
     }
 
+    public function welcome() {
+        return view('welcome');
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -89,23 +92,23 @@ class UserController extends Controller
     {
         try {
             $user = $this->userRepository->find($id);
-            if ($request->hasFile('avatar')) {
-                $filename = $request->avatar;
-                Cloudder::upload($filename, config('common.path_cloud_avatar')."$user->name");
-                $user->avatar = Cloudder::getResult()['url'];
-            }
-
-            $user->name = $request->get('name', '');
-            $user->address = $request->get('address', '');
-            $user->phone = $request->get('phone', '');
-            $user->email = $request->get('email', '');
-
-            $user->save();
         } catch (Exception $ex) {
-            return redirect()->route('users.edit')->withError($ex->getMessage());
+            return redirect()->route('users.profile.edit')->withError($ex->getMessage());
         }
 
-        return redirect('home');
+        if ($request->hasFile('avatar')) {
+            $filename = $request->avatar;
+            Cloudder::upload($filename, config('common.path_cloud_avatar')."$user->name");
+            $user->avatar = Cloudder::getResult()['url'];
+        }
+
+        $user->name = $request->name;
+        $user->address = $request->address;
+        $user->email = $request->email;
+
+        $user->save();
+
+        return redirect('/');
     }
 
     /**
