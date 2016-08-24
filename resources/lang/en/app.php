@@ -8,7 +8,7 @@ return [
     'profile' => 'Profile',
     'league' => 'League',
     'team' => 'Team',
-    'match' => 'Match',
+    'match' => 'User_Match',
     'player' => 'Player',
     'chart' => 'Chart',
 ];
