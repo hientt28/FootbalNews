@@ -57,7 +57,7 @@
                     <div class="menu">
                         <a class="item" href="{{ url('/logout') }}" class="ui inverted button"><i
                                     class="sign out icon"></i>&nbsp; {{ trans('login.logout') }}</a>
-                        <a class="item" href="#"><i class="user icon"></i>&nbsp;{{ trans('app.profile') }}</a>
+                        <a class="item" href="{{ route('users.edit', [Auth::user()->id]) }}"><i class="user icon"></i>&nbsp;{{ trans('app.profile') }}</a>
                         <a class="item" href="#"><i class="flag outline icon"></i>&nbsp;{{ trans('app.languages') }}</a>
                     </div>
                 </div>

@@ -10,6 +10,9 @@
 |
 */
 Route::auth();
+Route::get('/', function () {
+    return view('welcome');
+});
 Route::group(['middleware' => 'web'], function () {
     Route::get('/', [
         'as' => '/',
@@ -21,12 +24,19 @@ Route::group(['middleware' => 'web'], function () {
             'uses' => 'HomeController@welcome'
         ]);
     });
-    Route::group(['prefix' => 'users', 'namespace' => 'User'], function () {
+    Route::group(['namespace' => 'User'], function () {
+        Route::resource('users', 'UserController');
         Route::get('/', [
-            'as' => 'users.welcome',
-            'uses' => 'UserController@welcome'
+            'as' => 'users.index',
+            'uses' => 'UserController@index'
         ]);
         Route::resource('news', 'NewController');
         Route::resource('matches', 'MatchController', ['only' => ['index', 'show']]);
+    });
+    Route::group(['prefix' => 'users'], function () {
+        Route::get('home', [
+            'as' => 'home',
+            'uses' => 'HomeController@index'
+        ]);
     });
 });
