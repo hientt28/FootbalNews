@@ -55,7 +55,7 @@
                                         'type' => 'submit',
                                         'class' => 'btn btn-primary btn-md'
                                     ]) !!}
-                                    {{ link_to_route('/', trans('user.cancel'), null, ['class' => 'btn btn-default']) }}
+                                    {{ link_to_route('home', trans('user.cancel'), null, ['class' => 'btn btn-default']) }}
                                 </div>
                             </div>
                         </div>

@@ -1,8 +1,8 @@
 <?php
 return [
-    'edit_profile' => 'Edit Profile',
-    'update_profile' => 'Update Profile',
-    'avatar' => 'Choose Avatar',
+    'edit_profile' => 'Edit profile',
+    'update_profile' => 'Update profile',
+    'avatar' => 'Choose avatar',
     'image' => 'Image',
     'information' => 'Infomation',
     'name' => 'Name',
@@ -10,4 +10,5 @@ return [
     'phone' => 'Phone',
     'email' => 'Email',
     'cancel' => 'Cancel',
+    'my_profile' => 'My profile',
 ];

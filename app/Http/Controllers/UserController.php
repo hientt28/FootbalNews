@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\UpdateUserRequest;
@@ -28,7 +28,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return redirect()->route('/');
+        return redirect()->route('home');
     }
 
 
@@ -61,9 +61,8 @@ class UserController extends Controller
      */
     public function show($id)
     {
-//        return view('user.show', [
-//            'user' => Auth::user()
-//        ]);
+        $user = $this->userRepository->find($id);
+        return view('user.show', compact('user'));
     }
 
     /**

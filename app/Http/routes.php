@@ -1,4 +1,5 @@
 <?php
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -9,29 +10,31 @@
 | and give it the controller to call when that URI is requested.
 |
 */
-Route::auth();
+
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::auth();
+
+Route::get('/home', 'HomeController@index');
+    
+
 Route::group(['middleware' => 'web'], function () {
-    Route::get('/', [
-        'as' => '/',
-        'uses' => 'HomeController@index',
-    ]);
+    Route::get('/' , ['as' =>'home', 'uses' => 'HomeController@index']);
+    Route::group(['middleware' => 'isUser'], function () {
+        Route::group(['namespace' => 'User'], function () {
+            Route::resource('news', 'NewController');
+            Route::resource('matches', 'MatchController', ['only' => ['index', 'show']]); 
+        });
+        Route::resource('users', 'UserController');
+    });
+    
     Route::group(['prefix' => 'admin'], function () {
         Route::get('/', [
             'as' => 'admin.welcome',
             'uses' => 'HomeController@welcome'
         ]);
-    });
-    Route::group(['namespace' => 'User'], function () {
-        Route::resource('users', 'UserController');
-        Route::get('/', [
-            'as' => 'users.index',
-            'uses' => 'UserController@index'
-        ]);
-        Route::resource('news', 'NewController');
-        Route::resource('matches', 'MatchController', ['only' => ['index', 'show']]);
     });
     Route::group(['prefix' => 'users'], function () {
         Route::get('home', [
