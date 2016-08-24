@@ -10,5 +10,6 @@ return [
     'day_of_month' => 'Day Of Month',
     'team' => 'Team',
     'chart_team' => 'Chart team',
+    'comment' => 'Comment',
 
 ];

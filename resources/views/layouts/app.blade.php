@@ -70,6 +70,7 @@
         <i class="flag icon"></i>&nbsp;
         {{ trans('app.league') }}
       </a>
+       @can('is_admin', Auth::user())
         <a class="item" href="{{ route('admin.chart') }}">
             <i class="linux icon"></i>&nbsp;
             {{ trans('app.chart') }}
@@ -82,7 +83,6 @@
             <i class="linux icon"></i>&nbsp;
             {{ trans('app.player') }}
         </a>
-       @can('is_admin', Auth::user())
        <a class="item">
             <i class="soccer icon"></i>&nbsp;
             {{ trans('app.match') }}

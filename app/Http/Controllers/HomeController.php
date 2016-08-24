@@ -1,21 +1,21 @@
 <?php
 namespace App\Http\Controllers;
 use App\Http\Requests;
-use App\Repositories\Team\TeamRepository;
-use Illuminate\Http\Request;
+use App\Models\Post;
+use App\Repositories\Post\PostRepository;
 use Khill\Lavacharts\Laravel\LavachartsFacade as Lava;
 class HomeController extends Controller
 {
-    private $teamRepository;
+    private $postRepository;
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(TeamRepository $teamRepository)
+    public function __construct(PostRepository $postRepository)
     {
         $this->middleware('auth');
-        $this->teamRepository = $teamRepository;
+        $this->postRepository = $postRepository;
     }
     /**
      * Show the application dashboard.
@@ -33,17 +33,17 @@ class HomeController extends Controller
 
     public function chart()
     {
-        $teams = $this->teamRepository->groupByDate();
+        $posts = $this->postRepository->all();
+        
         $chartteams = Lava::DataTable();
 
-        $chartteams->addDateColumn(trans('common.day_of_month'))
-            ->addNumberColumn(trans('common.team'));
+        $chartteams->addStringColumn(trans('common.new'))
+            ->addNumberColumn(trans('common.comment'));
 
-        foreach ($teams as $key_team => $value_team) {
-            $chartteams->addRow([$key_team, count($value_team)]);
+        foreach ($posts as $post) {
+            $chartteams->addRow([$post->title, count($post->comments)]);
         }
-
-        Lava::LineChart('Team', $chartteams);
+        Lava::ColumnChart('Team', $chartteams);
         return view('admin.chart.index');
     }
 }

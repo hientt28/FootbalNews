@@ -15,10 +15,15 @@
                             <div class="panel panel-default">
                                 <div class="panel-body">
                                     <div class="dataTable_wrapper">
-                                        <div id="pop_div"></div>
-
-                                        <div class="pop_div"></div>
-                                        {!! Lava::render('LineChart', 'Team', 'pop_div') !!}
+                                        <div id="pop_div">
+                                            <div class="pop_div">
+                                            {!! Lava::render('ColumnChart', 'Team', 'pop_div') !!}
+                                            </div>
+                                        </div>
+                                        <div id="userbest_div">
+                                            <div class="pop_div">
+                                                {!! Lava::render('ColumnChart', 'Team', 'userbest_div') !!}
+                                            </div>
                                         </div>
                                 </div>
                             </div>
