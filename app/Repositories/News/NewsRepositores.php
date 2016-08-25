@@ -6,7 +6,7 @@ use App\Repositories\BaseRepository;
 use App\Models\Match;
 use App\Models\Team;
 use App\Models\Country;
-use App\Models\Continent;
+use App\Models\News;
 use App\Models\League;
 use App\Models\Event;
 use App\Models\Notification;
@@ -21,8 +21,8 @@ class NewsRepositories extends BaseRepository
 	public $leagues;
     public $notification;
 
-    public function __construct(Match $match, Team $team, Country $country, Continent $continent, League $leagues, Event $event, Notification $notification) {
-    	$this->model = $match;
+    public function __construct(Match $match, Team $team, Country $country, News $news, League $leagues, Event $event, Notification $notification) {
+    	$this->model = $news;
     	$this->team = $team;
     	$this->country = $country;
     	$this->continent = $continent;
