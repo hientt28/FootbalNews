@@ -34,17 +34,7 @@ class MatchController extends Controller
             'start' => 'start',
             'end' => 'end',
         ];
-
-       /* $this->matchRepository->create([
-            'home_id' => rand(), 
-            'guest_id' => rand(), 
-            'league_season_id' => rand(), 
-            'result' => '4-3', 
-            'rate' => rand(0, 10) / 10,
-            'location' => 'Old transford',
-            'start' => \Carbon\Carbon::now(),
-        ]);*/
-
+       
         if(app('request')->ajax()) {
             $matches = $this->matchRepository->all();
             $teams = $this->matchRepository->team->all();

@@ -1,7 +1,7 @@
 var app = (function () {
     var map = {};
 
-    var utils = new function(){
+    var utils = new function() {
         this.search = function (arr, key, value) {
             for (var k in arr) {
                 if(arr[k]['' + key] == value)
@@ -336,8 +336,12 @@ var app = (function () {
     var initMapWindow = function(_grid, menu){
         var jqxWidget = _grid;
         var offset = jqxWidget.offset();    
+        var pos = {
+            x : (offset !== undefined ? offset.left + 50 : 50),
+            y : (offset !== undefined ? offset.top + 50 : 50)
+        }
         menu.jqxWindow({
-            position: { x: offset.left + 50, y: offset.top + 50} ,
+            position: { x: pos.x, y: pos.y} ,
             theme : 'ui-redmond',
             showCollapseButton: true, maxHeight: 400, maxWidth: 700, minHeight: 200, minWidth: 200, height: 300, width: 500,
             initContent: function () {
@@ -590,6 +594,7 @@ var gridBuilder = new function() {
             } else if(columnproperties.datafield == 'created_at') {
                 return '<span style="margin: 4px;">' + data.created_at.time + '</span>';
             }
+
             return '<span style="margin: 4px; float: ' + columnproperties.cellsalign + ';">' + value + '</span>';
         }
 
@@ -603,21 +608,21 @@ var gridBuilder = new function() {
         var columns = this.columns();
 
         var config = {
-                        width : $('.ui.segment.content').width() - 40,
-                        source: data, 
-                        theme : 'ui-redmond',               
-                        pageable: true,
-                        autoheight: true,
-                        autorowheight: true,   
-                        showfilterrow : true,
-                        sortable: true,
-                        editable : configMenu && configMenu.editable ? configMenu.editable : false,
-                        editmode : 'dblclick',
-                        altrows: true,
-                        filterable: true,
-                        enabletooltips: true,
-                        columns: this.columns(cellsrenderer),
-                    };
+            width : configMenu != null ? configMenu.width : $('.ui.segment.content').width() - 40,
+            source: data, 
+            theme : 'ui-redmond',               
+            pageable: true,
+            autoheight: true,
+            autorowheight: true,   
+            showfilterrow : true,
+            sortable: true,
+            editable : configMenu && configMenu.editable ? configMenu.editable : false,
+            editmode : 'dblclick',
+            altrows: true,
+            filterable: true,
+            enabletooltips: true,
+            columns: this.columns(cellsrenderer),
+        };
 
         if (configMenu == null) {
             config.rendered = function () {
@@ -847,7 +852,8 @@ var matches = (function () {
         //create number input
         var rate =  $('#rate');
         var league_list = $('#league-list');
-        rate.jqxNumberInput({theme : 'ui-redmond', width: '325px', height: '35px', spinButtons: true });
+        if(rate.length > 0)
+            rate.jqxNumberInput({theme : 'ui-redmond', width: '325px', height: '35px', spinButtons: true });
         var val = $('input[name="rate"]').val();
         val ? rate.jqxNumberInput('val', val) : '';
 
@@ -888,8 +894,12 @@ var notifications = new function () {
             this.initGrid($('#notifications-list'), {}, null);
             var _window = $('#notifications-window');
             var offset = $('.ui.segment.content').offset();
+            var pos = {
+                x : (offset !== undefined ? offset.left + 50 : 50),
+                y : (offset !== undefined ? offset.top + 50 : 50)
+            }
             _window.jqxWindow({
-                position: { x: offset.left + 50, y: offset.top + 50} ,
+                position: { x: pos.x, y: pos.y} ,
                 theme : 'ui-redmond',
                 showCollapseButton: true, maxHeight: 800, maxWidth: 1000, minHeight: 200, minWidth: 200, height: 500, width: 740,
                 initContent: function () {
@@ -913,7 +923,7 @@ var notifications = new function () {
     }
 }
 
-var news = new function() {
+var newsBuilder = new function() {
     this.showDetail = function (url) {
         window.location.href = url;
     }
@@ -927,10 +937,148 @@ var news = new function() {
             });
         }
     }
+
+    this.initMatchesGrid = function (data) {
+        var grid = $('#matches-list');
+        var dropdown = $("#matches-dropdown");
+        if(grid.length > 0 && dropdown.length > 0) {
+            this.setConfig(data.datafields, data.matches);
+            this.setDatafields(
+                [
+                    { name: 'id', type: 'int' },
+                    { name: 'home_id', type: 'string' },
+                    { name: 'guest_id', type: 'string' },
+                    { name: 'home_name', type: 'string' },
+                    { name: 'guest_name', type: 'string' },
+                ]
+            );
+
+            this.initGrid(grid, {width : 500}, null);
+
+            grid.on('rowselect', function (event) {
+                var args = event.args;
+                var row = grid.jqxGrid('getrowdata', args.rowindex);
+                var dropDownContent = '<div style="position: relative; margin-left: 3px; margin-top: 5px;">' + row['home_name'] + ' - ' + row['guest_name'] + '</div>';
+                dropdown.attr('value', row.id);
+                dropdown.jqxDropDownButton('setContent', dropDownContent);
+                dropdown.jqxDropDownButton('close');
+            });
+        }
+    }.bind(gridBuilder);
+
+    var parent = this;
+    this.dropDownMatches = function () {
+        var dd = $("#matches-dropdown");
+        $.ajax({
+            url : 'news',
+            type : 'GET'   
+        }).done(function(res){
+            if(dd.length) {
+                 $("#matches-dropdown").jqxDropDownButton({
+                    width: 250, height: 25, theme : 'ui-redmond'
+                });
+                this.initMatchesGrid(res);
+            }
+        }.bind(parent));
+        
+    }
+
+    this.editor = function () {
+        var editor = $('#content-editor');
+            if(editor.length > 0) {
+                 editor.jqxEditor({
+                height: 350,
+                width: 550,
+                theme: 'ui-redmond',
+            });
+        }
+    }
+
+    this.addComment = function (id) {
+        var content = $('textarea[name="comment-text-' + id + '"]').val();
+            if(content) {
+                $.ajax({
+                    url : 'addComment',
+                    type : 'post',
+                    data : {
+                        content : content,
+                        news_id : $('.image.lazy').attr('primary')
+                    },
+                    beforeSend : function () {
+                        $('.comments-area').addClass('ui loading form');
+                    }
+                }).done(function(res){
+                    setTimeout(function(){
+                        $('.comments-area').removeClass('ui loading form');
+                    },500)
+                    var _html = '<div class="comment"><a class="avatar"><img src=""></a>';
+                    _html += '<div class="content"><a class="author">Matt</a><div class="text'+id+'"></div></div></div>';
+                    $('.comment-list').append(_html);
+                    $('.text' + id).text(content);
+                })
+            }
+    }
+
+    this.bindEvent = function () {
+        var form  = $('form[name="add-news"]');
+
+        form.submit(function(e){
+            e.preventDefault();
+        })
+
+        $('.add-news').click(function () {
+            form.unbind('submit');
+            $('input[name="content"]').val($('#content-editor').val());
+            $('input[name="match_id"]').val($('#matches-dropdown').attr('value'));
+            form.submit();
+        })
+
+        $('.addRep').click(function(){
+            
+        });
+    }
+
+    this.renderComments = function (id){
+        $('.comments-' + id).show(1500);
+    }
+
+    this.hideComments = function (id){
+        $('.comments-' + id).hide(1500);
+    }
+
+    this.getToken = function () {   
+        this.getComments('EAANKZCLDuQWEBAEKahZBVqIW3Kvarj8cP80HVk6A05vdhHNArGyTtwCb6eqhA5ILkFoKIlTjV1XLCsNoQCUZCQcWkVDbOxbzZBHVZCYftLKWt3yZB2qhX5otZC1zKwhUvplwMuYLxao0PxOl32xo2oQ4l3ZA4rJ7sZBZAdBjSyli684wZDZD');
+    }
+
+    this.getComments = function (token) {
+        $.ajax({
+            url : 'https://graph.facebook.com/1101700369924830_1101702536591280/comments?access_token=' + token,
+            type : 'GET'    
+        }).done(function(res){
+            if(res.data) {
+                var comments = $('.comments');
+                for(var d in res.data) {
+                    var data_href = "https://www.facebook.com/NamDnItBk92/posts/1101702536591280?comment_id=";
+                    data_href += res.data[d].id.split('_')[1];
+                    var comment = $('<div class="fb-comment-embed" data-href="' + data_href + '" data-width="500"></div>');
+                    comments.append(comment);
+                }
+            }
+            
+        });
+    }
+
+    this.init = function () {
+        this.lazyload();
+        this.dropDownMatches();
+        this.editor();
+        this.getToken();
+        this.bindEvent();
+    }
 }
 
 $(document).on('ready page:load', function(){
     app.bindEvent();
-    news.lazyload();
+    newsBuilder.init();
     matches();
 })

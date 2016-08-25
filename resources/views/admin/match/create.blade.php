@@ -28,7 +28,7 @@
 					      		<label>{{ $home->name }}</label>
 					      	@endif
 					    </div>
-					    <input type="hidden" name="home_id" value="{{ $home->id }}"/> 
+					    <input type="hidden" name="home_id" value="{{ isset($home) ? $home->id  : ''}}"/> 
 		       		</div>
 		       		<div class="four wide field">
 		       		{{ Form::input('number', null, null, ['name' => 'home_goal']) }}
@@ -48,7 +48,7 @@
 					      		<label>{{ $guest->name }}</label>
 					      	@endif
 					    </div>
-		       			<input type="hidden" name="guest_id" value="{{ $guest->id }}"/> 
+		       			<input type="hidden" name="guest_id" value="{{ isset($guest) ? $guest->id :''}}"/> 
 		       		</div>
 		       </div>
 	      	</div>

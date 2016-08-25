@@ -16,6 +16,7 @@
         "laravelcollective/bus": "^5.2",
         "cloudinary/cloudinary_php": "dev-master",
         "jrm2k6/cloudder": "0.2.*",
+        "khill/lavacharts" : "3.0.*",
         "predis/predis": "^1.1"
     },
     "require-dev": {
