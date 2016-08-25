@@ -30,6 +30,10 @@ Route::group(['middleware' => 'web'], function () {
             'as' => 'getListNotifications',
             'uses' => 'AdminController@getListNotifications'
         ]);
+        Route::post('/addComment', [
+            'as' => 'addComment',
+            'uses' => 'NewsController@addComment'
+        ]);
         /*************/
 
         Route::resource('news', 'NewsController');
@@ -49,6 +53,10 @@ Route::group(['middleware' => 'web'], function () {
         Route::post('/getListNotifications', [
             'as' => 'getListNotifications',
             'uses' => 'UserController@getListNotifications'
+        ]);
+        Route::post('/addComment', [
+            'as' => 'addComment',
+            'uses' => 'NewsController@addComment'
         ]);
         /**************/
         Route::resource('news', 'NewsController');

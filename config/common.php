@@ -5,7 +5,5 @@ return [
         'user' => 0,
         'admin' => 1,
     ],
-    'guess' => [
-    	
-    ]
+    'path_cloud_news' => 'football/news/',
 ];

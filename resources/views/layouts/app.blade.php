@@ -19,6 +19,7 @@
     <link href="{{ asset('css/jqx.ui-redmond.css') }}" rel="stylesheet">
 </head>
 <body id="app-layout">
+<div id="fb-root"></div>
 <div class="ui fixed inverted menu full height">
     <div class="main ui container">
         <a class="launch icon item" onclick="(function () {
@@ -132,7 +133,7 @@
 @else
     @yield('content')
 @endif
-@if(!Auth::guest())
+<!-- @if(!Auth::guest())
 <div class="ui black inverted vertical footer segment">
   <div class="ui center aligned container">
     <div class="ui stackable inverted grid">
@@ -149,15 +150,32 @@
     </div>
   </div>
 </div>
-@endif
+@endif -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script src="{{ asset('js/app.js') }}"></script>
 <script src="{{ asset('js/semantic.min.js') }}"></script>
 <script src="{{ asset('js/jqx-all.js') }}"></script>
-<script src="{{ asset('js/jquery.lazyload.js') }}"></script>
+<script src="{{ asset('js/jquery.lazyload.js') }}" type="text/javascript"></script>
 <script src="https://cdn.socket.io/socket.io-1.3.4.js"></script>    
 <script src="https://maps.googleapis.com/maps/api/js?json?&mode=transit&origin=frontera+el+hierro&destination=la+restinga+el+hierro&departure_time=1399995076&key=AIzaSyBY2xnVxwjLYhuBNmhiMDUExm-vpUBa-IY&&libraries=places&callback=app.initMap"p
          async defer></script>
+
+<script>
+window.fbAsyncInit = function() {
+    FB.init({
+        appId      : '926874090750305',
+        xfbml      : true,
+        version    : 'v2.7'
+    });
+};
+
+(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v2.7&appId=926874090750305";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 </body>
 </html>
