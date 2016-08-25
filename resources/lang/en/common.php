@@ -11,5 +11,8 @@ return [
     'team' => 'Team',
     'chart_team' => 'Chart team',
     'comment' => 'Comment',
+    'price_of_user' => 'Price of user',
+    'price' => 'Price',
+    'percent' => 'Percent',
 
 ];
