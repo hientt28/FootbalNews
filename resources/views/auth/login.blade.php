@@ -24,19 +24,16 @@
             <div class="button-container">
                 <button type="submit"><span>{{ trans('login.go') }}</span></button>
             </div>
-            <div class="button-social">
-                <button class="ui facebook button">
+            <div class="social-container">
+                <a class="ui circular facebook icon button" href="login/facebook/redirect">
                     <i class="facebook icon"></i>
-                    {{ trans('login.facebook') }}
-                </button>
-                <button class="ui twitter button">
+                </a>
+                <a class="ui circular twitter icon button" href="login/twitter/redirect">
                     <i class="twitter icon"></i>
-                    {{ trans('login.twitter') }}
-                </button>
-                <button class="ui google plus button">
+                </a>
+                <a class="ui circular google plus icon button" href="login/google/redirect">
                     <i class="google plus icon"></i>
-                    {{ trans('login.google') }}
-                </button>
+                </a>
             </div>
             <div class="footer"><a href="#">{{ trans('login.forgot_password') }}</a></div>
             {{ Form::close() }}

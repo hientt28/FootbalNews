@@ -11,4 +11,7 @@ return [
     'match' => 'User_Match',
     'player' => 'Player',
     'chart' => 'Chart',
+    'language' => 'Language',
+    'english' => 'English',
+    'vienamese' => 'Vietnamese',
 ];

@@ -4,6 +4,7 @@ use App\Http\Requests;
 use App\Repositories\Post\PostRepository;
 use App\Repositories\UserMatch\UserMatchRepository;
 use Khill\Lavacharts\Laravel\LavachartsFacade as Lava;
+use Session;
 class HomeController extends Controller
 {
     private $postRepository;
@@ -69,5 +70,11 @@ class HomeController extends Controller
                         ]
                 ]);
         return view('admin.chart.index');
+    }
+
+    public function chooseLanguage($lang)
+    {
+        Session::put('lang', $lang);
+        return redirect()->back();
     }
 }

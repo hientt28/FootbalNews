@@ -416,3 +416,16 @@
    width: 200px;
    height: 200px;
  }
+ .social-container {
+      text-align: center;
+ }
+ .avatar {
+      border-radius: 50%; 
+      width: 30px;
+      height: 30px;  
+ }
+ #show_avatar {
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+ }

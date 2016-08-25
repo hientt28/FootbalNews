@@ -1,8 +1,10 @@
 <?php
 namespace App\Services;
+
 use App\Models\User;
 use App\Models\SocialNetwork;
 use Laravel\Socialite\Contracts\Provider;
+
 class SocialNetworkServices
 {
     public function createOrGetUser(Provider $provider)

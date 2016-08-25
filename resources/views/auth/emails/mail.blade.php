@@ -4,13 +4,13 @@
     <meta charset="utf-8">
 </head>
 <body>
-<h2>Verify Your Email Address</h2>
+<h2>{{ trans('message.title') }}</h2>
 
 <div>
-    Thanks for creating an account with TMS System App.
-    Please follow the link below to verify your email address
+    {!! trans('message.content') !!}
     <br/>
-    {{ URL::to('register/verify/' . $confirmation_code) }}.<br/>
+    <!-- {{ URL::to('register/verify/' . $confirmation_code) }}.<br/> -->
+    <a href="{{ route('user.active', $confirmation_code) }}"> {{ trans('message.link') }} </a>
 
 </div>
 

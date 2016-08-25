@@ -53,12 +53,26 @@
                 @endcan
                 
                 <div class="ui simple dropdown item">
+                    {!! Html::image(Auth::user()->avatar ? Auth::user()->avatar : asset('images\man.png'), null , ['class' => 'avatar']) !!}
                     {{ Auth::user()->name }} <i class="dropdown icon"></i>
                     <div class="menu">
                         <a class="item" href="{{ url('/logout') }}" class="ui inverted button"><i
                                     class="sign out icon"></i>&nbsp; {{ trans('login.logout') }}</a>
-                        <a class="item" href="#"><i class="user icon"></i>&nbsp;{{ trans('app.profile') }}</a>
-                        <a class="item" href="#"><i class="flag outline icon"></i>&nbsp;{{ trans('app.languages') }}</a>
+                        <a class="item" href="{{ route('users.profile.show', [Auth::user()->id]) }}"><i class="user icon"></i>&nbsp;{{ trans('app.profile') }}</a>
+                        <div class="ui right pointing dropdown link item">
+                            <i class="dropdown icon"></i>
+                            {{ trans('app.language') }}
+                            <div class="menu">
+                                <div class="item"><a href=" {{ route('lang', 'en') }} ">
+                                    <i class="us flag"></i>
+                                    {{ trans('app.english') }}</a>
+                                </div>
+                                <div class="item"><a href="{{ route('lang', 'vi') }}">
+                                    <i class="vietnam flag"></i>
+                                    {{ trans('app.vietnamese') }}</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             @endif
