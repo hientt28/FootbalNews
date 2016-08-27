@@ -16,4 +16,5 @@ return [
     'guess' => [
     	
     ],
+    'path_cloud_news' => 'football/news/',
 ];

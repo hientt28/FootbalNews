@@ -47,7 +47,11 @@
                                         'type' => 'submit',
                                         'class' => 'btn btn-primary btn-md'
                                     ]) !!}
-                                    {{ link_to_route('users.profile.welcome', trans('user.cancel'), null, ['class' => 'btn btn-default']) }}
+                                    @can('is_admin', Auth::user())
+                                        {{ link_to_route('admin.profile.index', trans('user.cancel'), null, ['class' => 'btn btn-default']) }}
+                                    @else
+                                        {{ link_to_route('users.profile.index', trans('user.cancel'), null, ['class' => 'btn btn-default']) }}
+                                    @endcan
                                 </div>
                             </div>
                         </div>

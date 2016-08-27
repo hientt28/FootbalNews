@@ -90,7 +90,6 @@
         {{ trans('app.league') }}
       </a>
        @can('is_admin', Auth::user())
-<<<<<<< HEAD
         <a class="item" href="{{ route('admin.chart') }}">
             <i class="linux icon"></i>&nbsp;
             {{ trans('app.chart') }}
@@ -103,10 +102,7 @@
             <i class="linux icon"></i>&nbsp;
             {{ trans('app.player') }}
         </a>
-       <a class="item">
-=======
        <a class="item" href="{{ route('admin.matches.index') }}">
->>>>>>> 73e2e8677e70e3d7254b61bfc91676f5e26ada4d
             <i class="soccer icon"></i>&nbsp;
             {{ trans('app.match') }}
         </a>
@@ -116,7 +112,6 @@
             {{ trans('app.match') }}
         </a>
        @endcan
-      
     </div>
     <div class="pusher">
     </div>
@@ -182,7 +177,7 @@
 <script src="{{ asset('js/app.js') }}"></script>
 <script src="{{ asset('js/semantic.min.js') }}"></script>
 <script src="{{ asset('js/jqx-all.js') }}"></script>
-<script src="{{ asset('js/jquery.lazyload.js') }}"></script>
+<script src="{{ asset('js/jquery.lazyload.js') }}" type="text/javascript"></script>
 <script src="https://cdn.socket.io/socket.io-1.3.4.js"></script>    
 <script src="https://maps.googleapis.com/maps/api/js?json?&mode=transit&origin=frontera+el+hierro&destination=la+restinga+el+hierro&departure_time=1399995076&key=AIzaSyBY2xnVxwjLYhuBNmhiMDUExm-vpUBa-IY&&libraries=places&callback=app.initMap"p
          async defer></script>

@@ -1,7 +1,7 @@
 var app = (function () {
     var map = {};
 
-    var utils = new function(){
+    var utils = new function() {
         this.search = function (arr, key, value) {
             for (var k in arr) {
                 if(arr[k]['' + key] == value)
@@ -590,6 +590,7 @@ var gridBuilder = new function() {
             } else if(columnproperties.datafield == 'created_at') {
                 return '<span style="margin: 4px;">' + data.created_at.time + '</span>';
             }
+
             return '<span style="margin: 4px; float: ' + columnproperties.cellsalign + ';">' + value + '</span>';
         }
 
@@ -603,21 +604,21 @@ var gridBuilder = new function() {
         var columns = this.columns();
 
         var config = {
-                        width : $('.ui.segment.content').width() - 40,
-                        source: data, 
-                        theme : 'ui-redmond',               
-                        pageable: true,
-                        autoheight: true,
-                        autorowheight: true,   
-                        showfilterrow : true,
-                        sortable: true,
-                        editable : configMenu && configMenu.editable ? configMenu.editable : false,
-                        editmode : 'dblclick',
-                        altrows: true,
-                        filterable: true,
-                        enabletooltips: true,
-                        columns: this.columns(cellsrenderer),
-                    };
+            width : configMenu.width ? configMenu.width : $('.ui.segment.content').width() - 40,
+            source: data, 
+            theme : 'ui-redmond',               
+            pageable: true,
+            autoheight: true,
+            autorowheight: true,   
+            showfilterrow : true,
+            sortable: true,
+            editable : configMenu && configMenu.editable ? configMenu.editable : false,
+            editmode : 'dblclick',
+            altrows: true,
+            filterable: true,
+            enabletooltips: true,
+            columns: this.columns(cellsrenderer),
+        };
 
         if (configMenu == null) {
             config.rendered = function () {
@@ -913,7 +914,7 @@ var notifications = new function () {
     }
 }
 
-var news = new function() {
+var newsBuilder = new function() {
     this.showDetail = function (url) {
         window.location.href = url;
     }
@@ -927,10 +928,73 @@ var news = new function() {
             });
         }
     }
+
+    this.initMatchesGrid = function (data) {
+        var grid = $('#matches-list');
+        var dropdown = $("#matches-dropdown");
+        this.setConfig(data.datafields, data.matches);
+        this.setDatafields(
+            [
+                { name: 'id', type: 'int' },
+                { name: 'home_id', type: 'string' },
+                { name: 'guest_id', type: 'string' },
+                { name: 'home_name', type: 'string' },
+                { name: 'guest_name', type: 'string' },
+            ]
+        );
+
+        this.initGrid(grid, {width : 500}, null);
+
+        grid.on('rowselect', function (event) {
+            var args = event.args;
+            var row = grid.jqxGrid('getrowdata', args.rowindex);
+            var dropDownContent = '<div style="position: relative; margin-left: 3px; margin-top: 5px;">' + row['home_name'] + ' - ' + row['guest_name'] + '</div>';
+            dropdown.jqxDropDownButton('setContent', dropDownContent);
+            dropdown.attr('value', row.id);
+            dropdown.jqxDropDownButton('close');
+        });
+    }.bind(gridBuilder);
+
+    var parent = this;
+    this.dropDownMatches = function () {
+
+        $.ajax({
+            url : 'news',
+            type : 'GET'   
+        }).done(function(res){
+            console.log(res);
+            $("#matches-dropdown").jqxDropDownButton({
+                width: 250, height: 25, theme : 'ui-redmond'
+            });
+            this.initMatchesGrid(res);
+        }.bind(parent));
+        
+    }
+
+    this.editor = function () {
+        /*var editor = $('#content');
+        editor.jqxEditor({
+            height: 350,
+            width: 550,
+            theme: 'ui-redmond',
+        });*/
+    }
+
+    this.bindEvent = function () {
+
+        $('.add-news').click(function () {
+        })
+    }
+
+    this.init = function () {
+        this.lazyload();
+        this.dropDownMatches();
+        this.editor();
+    }
 }
 
 $(document).on('ready page:load', function(){
     app.bindEvent();
-    news.lazyload();
+    newsBuilder.init();
     matches();
 })
