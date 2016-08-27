@@ -23,28 +23,39 @@ Route::group(['middleware' => 'web'], function () {
         'as' => 'lang',
         'uses' => 'HomeController@chooseLanguage'
     ]);
-    Route::group(['prefix' => 'admin', 'namespace' => 'Admin',
-        'middleware' => 'auth'], function () {
-        Route::get('/', [
-            'as' => 'admin.welcome',
-            'uses' => 'AdminController@welcome'
-        ]);
+    Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
+        Route::group(['namespace' => 'Admin'], function() {
+            Route::get('/', [
+                'as' => '/',
+                'uses' => 'AdminController@index',
+            ]);
+            Route::resource('teams', 'TeamController');
+            Route::resource('players', 'PlayerController');
+            Route::resource('news', 'NewsController');
+            Route::resource('matches', 'MatchController');
+            Route::resource('profile', 'AdminController');
+            Route::post('/getTotalNotification', [
+                'as' => 'getTotalNotification',
+                'uses' => 'AdminController@getTotalNotification'
+            ]);
+            Route::post('/getListNotifications', [
+                'as' => 'getListNotifications',
+                'uses' => 'AdminController@getListNotifications'
+            ]);
+
+        });
+
         Route::get('chart', [
             'as' => 'admin.chart',
             'uses' => 'HomeController@chart'
         ]);
-        Route::resource('teams', 'Admin\TeamController');
-        Route::resource('players', 'Admin\PlayerController');
+
     });
     Route::group(['prefix' => 'users', 'namespace' => 'User', 'middleware' => 'auth'], function () {
         Route::resource('profile', 'UserController');
-        Route::post('/getTotalNotification', [
-            'as' => 'getTotalNotification',
-            'uses' => 'AdminController@getTotalNotification'
-        ]);
-        Route::post('/getListNotifications', [
-            'as' => 'getListNotifications',
-            'uses' => 'AdminController@getListNotifications'
+        Route::get('/', [
+            'as' => '/',
+            'uses' => 'UserController@index',
         ]);
 
         Route::resource('news', 'NewsController');

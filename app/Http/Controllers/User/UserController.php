@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\User;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\UserRequest;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -21,17 +20,8 @@ class UserController extends Controller
     {
         $this->userRepository = $userRepository;
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //return redirect()->route('home');
-    }
 
-    public function welcome() {
+    public function index() {
         return view('welcome');
     }
 
