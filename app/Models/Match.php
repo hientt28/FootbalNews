@@ -31,10 +31,14 @@ class Match extends Model
     {
         return $this->belongsTo(LeagueSeason::class);
     }
-    
+
     public function posts()
     {
         return $this->hasMany(Post::class);
+    }
+    public function news()
+    {
+        return $this->hasMany(News::class);
     }
 
     public function events()

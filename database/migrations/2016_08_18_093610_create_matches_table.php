@@ -21,7 +21,7 @@ class CreateMatchesTable extends Migration
             $table->float('rate');
             $table->string('location');
             $table->dateTime('start');
-            $table->dateTime('end');
+            $table->dateTime('end')->nullable();
             $table->timestamps();
         });
     }

@@ -22,4 +22,9 @@ class League extends Model
     {
         return $this->belongsToMany(Season::class);
     }
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
+    }
 }

@@ -5,6 +5,9 @@ use App\Repositories\Post\PostRepository;
 use App\Repositories\UserMatch\UserMatchRepository;
 use Khill\Lavacharts\Laravel\LavachartsFacade as Lava;
 use Session;
+use App\Models\Notification;
+use Illuminate\Http\Request;
+
 class HomeController extends Controller
 {
     private $postRepository;
@@ -21,7 +24,7 @@ class HomeController extends Controller
         $this->userMatchRepository = $userMatchRepository;
     }
     /**
-     * Show the application dashboard.
+     * Show the application dashboardn .
      *
      * @return \Illuminate\Http\Response
      */
@@ -76,5 +79,15 @@ class HomeController extends Controller
     {
         Session::put('lang', $lang);
         return redirect()->back();
+    }
+    public function getTotalNotification() {
+        $total = 0;   
+        try {
+            $total = Notification::count();
+        } catch(Exception $e) {
+            $total = 0;
+        }
+
+        return response()->json(['total' => $total, 'status' => 'OK']);
     }
 }

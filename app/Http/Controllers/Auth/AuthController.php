@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
+use App\Models\User;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -76,8 +76,7 @@ class AuthController extends Controller
 
     public function redirectPath()
     {
-        $role = auth()->user()->role;
-        if ($role == config('common.roles.admin')) {
+        if (auth()->user()->isAdmin()) {
             $this->redirectTo = '/admin';
         } else {
             $this->redirectTo = '/users';

@@ -9,4 +9,9 @@ return [
     'content' => 'Thanks for creating an account with FFN System App.<br/>
     Please follow the link below to verify your email address',
     'link' => 'Link',
+    'match' => [
+    	'create' => 'Create Match Successfully',
+    	'update' => 'Update Match Successfully',
+    	'delete' => 'Delete Match Successfully', 	
+    ],
 ];

@@ -1,20 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
-	
-	<div class="container page-content">
-    	<div class="row">
-    	 <div class="col-md-10 col-md-offset-1">
-            <div class="panel panel-default ">
-                <div class="panel-heading"></div>
-
-                <div class="panel-body ui fluid">
-                    <div id="jqxgrid"></div>
-                </div>
-            </div>
-        </div>
-    	@yield('grid')
-    	</div>
+    	
+	<div class="page-content">
+        @include('layouts.result')
+        <h2 class="ui blue header">Matches list</h2>
+        <div id="jqxgrid"></div>
+        @include('layouts.map')
+        @include('layouts.menu', ['id' => 'Menu'])
+        @can('is_user', Auth::user())
+        	@include('user.match.usermatch')
+        @endcan
+	   @yield('grid')
     </div>		
 
 @endsection

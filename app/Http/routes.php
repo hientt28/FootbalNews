@@ -23,10 +23,11 @@ Route::group(['middleware' => 'web'], function () {
         'as' => 'lang',
         'uses' => 'HomeController@chooseLanguage'
     ]);
-    Route::group(['prefix' => 'admin'], function () {
+    Route::group(['prefix' => 'admin', 'namespace' => 'Admin',
+        'middleware' => 'auth'], function () {
         Route::get('/', [
             'as' => 'admin.welcome',
-            'uses' => 'HomeController@welcome'
+            'uses' => 'AdminController@welcome'
         ]);
         Route::get('chart', [
             'as' => 'admin.chart',
@@ -35,14 +36,19 @@ Route::group(['middleware' => 'web'], function () {
         Route::resource('teams', 'Admin\TeamController');
         Route::resource('players', 'Admin\PlayerController');
     });
-    Route::group(['prefix' => 'users', 'namespace' => 'User'], function () {
+    Route::group(['prefix' => 'users', 'namespace' => 'User', 'middleware' => 'auth'], function () {
         Route::resource('profile', 'UserController');
-        Route::get('/', [
-            'as' => 'users.profile.welcome',
-            'uses' => 'UserController@welcome'
+        Route::post('/getTotalNotification', [
+            'as' => 'getTotalNotification',
+            'uses' => 'AdminController@getTotalNotification'
         ]);
-        Route::resource('news', 'NewController');
-        Route::resource('matches', 'MatchController', ['only' => ['index', 'show']]);
+        Route::post('/getListNotifications', [
+            'as' => 'getListNotifications',
+            'uses' => 'AdminController@getListNotifications'
+        ]);
+
+        Route::resource('news', 'NewsController');
+        Route::resource('matches', 'MatchController');
     });
 
      Route::group(['prefix' => 'login'], function () {
@@ -56,3 +62,4 @@ Route::group(['middleware' => 'web'], function () {
         ]);
     });
 });
+
