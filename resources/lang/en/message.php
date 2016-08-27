@@ -14,4 +14,7 @@ return [
     	'update' => 'Update Match Successfully',
     	'delete' => 'Delete Match Successfully', 	
     ],
+    'create_success' => 'Create Success',
+    'delete_success' => 'Delete Success',
+    'update_success' => 'Update Success',
 ];

@@ -17,4 +17,16 @@ return [
     	
     ],
     'path_cloud_news' => 'football/news/',
+    
+    'pagination' => [
+        'per_page' => 5,
+        'per_page_league' => 3,
+    ],
+
+    'year' => [
+        'start' => 1990,
+        'end' => 2099,
+    ],
+
+    'path_cloud_league' => 'football/league/',
 ];

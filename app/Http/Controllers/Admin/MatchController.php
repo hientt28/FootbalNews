@@ -137,8 +137,6 @@ class MatchController extends Controller
             $message = $e->getMessage();
 
             return view('admin.match.index')->withError($message);
-        } finally {
-            
         }
 
         return view('admin.match.index')->withSuccess($message);

@@ -8,19 +8,19 @@ var app = (function () {
                     return arr[k];
             }
 
-            return null; 
+            return null;
         }
 
         Number.prototype.formatMoney = function(c, d, t){
-            var n = this, 
-                c = isNaN(c = Math.abs(c)) ? 2 : c, 
-                d = d == undefined ? "." : d, 
-                t = t == undefined ? "," : t, 
-                s = n < 0 ? "-" : "", 
-                i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "", 
+            var n = this,
+                c = isNaN(c = Math.abs(c)) ? 2 : c,
+                d = d == undefined ? "." : d,
+                t = t == undefined ? "," : t,
+                s = n < 0 ? "-" : "",
+                i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "",
                 j = (j = i.length) > 3 ? j % 3 : 0;
-               return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
-         };
+            return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+        };
 
     }
 
@@ -31,46 +31,46 @@ var app = (function () {
 
     var bindEvent = function () {
         resetLocal();
-        
+
         var form = $('form[name="form-bet"]');
         if(form.length > 0) {
             $('form[name="form-bet"]').jqxValidator({
-                     animation: 'none',
-                     rules: [{
-                         input: '#team-guess',
-                         message: 'Team guess is required!',
-                         action: 'blur',
-                         rule: function (input){
-                            var val = input.val();
-                            if(!val)
-                                return false
-                            return true;
-                         },
-                        position : 'topcenter'
-                     }, {
-                        input: '#result',
-                        message: 'result',
-                        action: 'blur',
-                        rule: function (input){
-                            var val = input.val();
-                            if(!val)
-                                return false
-                            return true;
-                        },
-                        position : 'topcenter'
-                     }, {
-                         input: '#price',
-                         message: 'Price is required',
-                         action: 'blur',
-                         rule: function (input){
-                            var val = input.val();
-                            if(!val)
-                                return false
-                            return true;
-                         },
-                         position : 'topcenter'
-                     }]
-             });
+                animation: 'none',
+                rules: [{
+                    input: '#team-guess',
+                    message: 'Team guess is required!',
+                    action: 'blur',
+                    rule: function (input){
+                        var val = input.val();
+                        if(!val)
+                            return false
+                        return true;
+                    },
+                    position : 'topcenter'
+                }, {
+                    input: '#result',
+                    message: 'result',
+                    action: 'blur',
+                    rule: function (input){
+                        var val = input.val();
+                        if(!val)
+                            return false
+                        return true;
+                    },
+                    position : 'topcenter'
+                }, {
+                    input: '#price',
+                    message: 'Price is required',
+                    action: 'blur',
+                    rule: function (input){
+                        var val = input.val();
+                        if(!val)
+                            return false
+                        return true;
+                    },
+                    position : 'topcenter'
+                }]
+            });
         }
 
         $('.toggle').on('click', function() {
@@ -87,9 +87,9 @@ var app = (function () {
         });
 
         $('form[name="match-update-form"], form[name="form-bet"]').submit(function(e){
-                e.preventDefault();
-                return false;
-        });   
+            e.preventDefault();
+            return false;
+        });
 
         $('button[name="edit-match"]').on('click', function(){
             var events = $('#events_list').jqxGrid('getrows');
@@ -102,7 +102,7 @@ var app = (function () {
         });
 
         $('#usermatchWindow').on('close', function(){
-             $('form[name="form-bet"]').jqxValidator('hide');
+            $('form[name="form-bet"]').jqxValidator('hide');
         })
 
         $('#price').on('change', function(){
@@ -112,11 +112,11 @@ var app = (function () {
             $('.bonus').text(bonus.formatMoney(2, '.', ',') + ' d');
         })
 
-        $('button[name="bet-match"]').on('click', function (){ 
+        $('button[name="bet-match"]').on('click', function (){
             var flag = $('form[name="form-bet"]').jqxValidator('validate');
             if(!flag)
                 return;
-            
+
             $.ajax({
                 type : 'GET',
                 data : {
@@ -142,44 +142,44 @@ var app = (function () {
                 }
             })
         });
-      
+
         $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
 
-        var socket = io.connect('http://localhost:8890');
+        /*var socket = io.connect('http://localhost:8890');
         socket.on('message', function (data) {
             var msg = $('#message');
             try {
                 data = $.parseJSON(data);
             } catch(e) {
                 if(data.indexOf('admin')) {
-                     $('.msg-user-content').text('Admin has close match!'); 
-                     $('#messageToUser').jqxNotification('open');
+                    $('.msg-user-content').text('Admin has close match!');
+                    $('#messageToUser').jqxNotification('open');
                 }
             }
-            
+
             if(data.avatar) {
                 $('#user-bet').attr('src', data.avatar);
             }
 
-            $('.msg-content').text('User ' + (data.user_name ? data.user_name : '') + ' bet a match'); 
+            $('.msg-content').text('User ' + (data.user_name ? data.user_name : '') + ' bet a match');
             var totalMsg = parseInt($('#_message').text());
             if(typeof totalMsg != NaN) {
                 $('#_message').text(++totalMsg);
-            }               
+            }
             msg.jqxNotification('open');
-        });
+        });*/
 
         getTotalNotification();
     }
 
-     var getTotalNotification = function () {
+    var getTotalNotification = function () {
         $.ajax({
             url : 'getTotalNotification',
-            type : 'POST', 
+            type : 'POST',
             beforeSend : function(){
                 $('#_message').addClass('ui loading form');
             }
@@ -192,10 +192,10 @@ var app = (function () {
     }
 
     var initMap = function() {
-         map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: 21.0104218, lng: 105.81846159999998},
-          zoom: 13,
-          mapTypeId: 'roadmap'
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: 21.0104218, lng: 105.81846159999998},
+            zoom: 13,
+            mapTypeId: 'roadmap'
         });
 
         // Create the search box and link it to the UI element.
@@ -205,81 +205,81 @@ var app = (function () {
 
         // Bias the SearchBox results towards current map's viewport.
         map.addListener('bounds_changed', function() {
-          searchBox.setBounds(map.getBounds());
+            searchBox.setBounds(map.getBounds());
         });
 
         var markers = [];
         // Listen for the event fired when the user selects a prediction and retrieve
         // more details for that place.
         searchBox.addListener('places_changed', function() {
-          var places = searchBox.getPlaces();
+            var places = searchBox.getPlaces();
 
-          if (places.length == 0) {
-            return;
-          }
-
-          // Clear out the old markers.
-          markers.forEach(function(marker) {
-            marker.setMap(null);
-          });
-          markers = [];
-
-          // For each place, get the icon, name and location.
-          var bounds = new google.maps.LatLngBounds();
-          places.forEach(function(place) {
-            if (!place.geometry) {
-              console.log("Returned place contains no geometry");
-              return;
-            }
-            var icon = {
-              url: place.icon,
-              size: new google.maps.Size(71, 71),
-              origin: new google.maps.Point(0, 0),
-              anchor: new google.maps.Point(17, 34),
-              scaledSize: new google.maps.Size(25, 25)
-            };
-
-            // Create a marker for each place.
-            markers.push(new google.maps.Marker({
-              map: map,
-              icon: icon,
-              title: place.name,
-              position: place.geometry.location
-            }));
-
-            for(var k in markers) {
-                markers[k].addListener('click', function() {
-                    var pos = markers[k].getPosition();
-                    var address = markers[k].title;
-                    $('input[name="address"]').val(address);
-                    $('input[name="location"]').val(address);
-                    $('#window').jqxWindow('close');
-                });
+            if (places.length == 0) {
+                return;
             }
 
-            if (place.geometry.viewport) {
-              // Only geocodes have viewport.
-              bounds.union(place.geometry.viewport);
-            } else {
-              bounds.extend(place.geometry.location);
-            }
-          });
-          map.fitBounds(bounds);
+            // Clear out the old markers.
+            markers.forEach(function(marker) {
+                marker.setMap(null);
+            });
+            markers = [];
+
+            // For each place, get the icon, name and location.
+            var bounds = new google.maps.LatLngBounds();
+            places.forEach(function(place) {
+                if (!place.geometry) {
+                    console.log("Returned place contains no geometry");
+                    return;
+                }
+                var icon = {
+                    url: place.icon,
+                    size: new google.maps.Size(71, 71),
+                    origin: new google.maps.Point(0, 0),
+                    anchor: new google.maps.Point(17, 34),
+                    scaledSize: new google.maps.Size(25, 25)
+                };
+
+                // Create a marker for each place.
+                markers.push(new google.maps.Marker({
+                    map: map,
+                    icon: icon,
+                    title: place.name,
+                    position: place.geometry.location
+                }));
+
+                for(var k in markers) {
+                    markers[k].addListener('click', function() {
+                        var pos = markers[k].getPosition();
+                        var address = markers[k].title;
+                        $('input[name="address"]').val(address);
+                        $('input[name="location"]').val(address);
+                        $('#window').jqxWindow('close');
+                    });
+                }
+
+                if (place.geometry.viewport) {
+                    // Only geocodes have viewport.
+                    bounds.union(place.geometry.viewport);
+                } else {
+                    bounds.extend(place.geometry.location);
+                }
+            });
+            map.fitBounds(bounds);
         });
-      }
+    }
 
-      var calculateRoute = function (from, to) {
-            var directionsService = new google.maps.DirectionsService();
-            var directionsRequest = {
-              origin: from,
-              destination: to,
-              travelMode: google.maps.DirectionsTravelMode.DRIVING,
-              unitSystem: google.maps.UnitSystem.METRIC
-            };
-            directionsService.route(
-              directionsRequest,
-              function(response, status)
-              {
+    var calculateRoute = function (from, to) {
+        var directionsService = new google.maps.DirectionsService();
+        var directionsRequest = {
+            origin: from,
+            destination: to,
+            travelMode: google.maps.DirectionsTravelMode.DRIVING,
+            unitSystem: google.maps.UnitSystem.METRIC
+        };
+        directionsService.route(
+            directionsRequest,
+            function(response, status)
+            {
                 if (status == google.maps.DirectionsStatus.OK)
                 {
                     new google.maps.DirectionsRenderer({
@@ -287,16 +287,16 @@ var app = (function () {
                         directions: response
                     });
                     setTimeout(function () {
-                         google.maps.event.trigger(map, 'resize');
+                        google.maps.event.trigger(map, 'resize');
                     }, 1000);
                 }
                 else {
                     $('#map').append('<h3>Unable to retrieve your address<br /></h3>')
-                } 
+                }
 
                 $('#window').jqxWindow('open');
-              }
-            );
+            }
+        );
     }
 
     var getDirections = function (location) {
@@ -306,44 +306,48 @@ var app = (function () {
             return;
         }
         navigator.geolocation.getCurrentPosition(function(position) {
-            var geocoder = new google.maps.Geocoder();
-            geocoder.geocode({
-              "location": new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
+                var geocoder = new google.maps.Geocoder();
+                geocoder.geocode({
+                        "location": new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
+                    },
+                    function(results, status) {
+                        if (status == google.maps.GeocoderStatus.OK) {
+                            pos = results[0].formatted_address;
+                            calculateRoute(pos, location);
+
+                        } else
+                        {
+                            $('#map').empty();
+                            $('#map').html('<h3>Unable to retrieve your address<br /></h3>')
+                        }
+                    });
             },
-            function(results, status) {
-                if (status == google.maps.GeocoderStatus.OK) {
-                    pos = results[0].formatted_address;
-                    calculateRoute(pos, location);
-                    
-                } else
-                {
-                    $('#map').empty();   
-                    $('#map').html('<h3>Unable to retrieve your address<br /></h3>')
-                }
+            function(positionError){
+                $("#error").append("Error: " + positionError.message + "<br />");
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 10 * 1000 // 10 seconds
             });
-          },
-          function(positionError){
-            $("#error").append("Error: " + positionError.message + "<br />");
-          },
-          {
-            enableHighAccuracy: true,
-            timeout: 10 * 1000 // 10 seconds
-          });
 
         return pos;
     }
 
     var initMapWindow = function(_grid, menu){
         var jqxWidget = _grid;
-        var offset = jqxWidget.offset();    
+        var offset = jqxWidget.offset();
+        var pos = {
+            x  : (offset !== undefined ? offset.left + 50 : 50),
+            y : (offset !== undefined ? offset.top + 50 : 50)
+        }
         menu.jqxWindow({
-            position: { x: offset.left + 50, y: offset.top + 50} ,
+            position: { x: pos.x, y: pos.y} ,
             theme : 'ui-redmond',
             showCollapseButton: true, maxHeight: 400, maxWidth: 700, minHeight: 200, minWidth: 200, height: 300, width: 500,
             initContent: function () {
                 menu.jqxWindow('focus');
             }
-        }); 
+        });
         menu.jqxWindow('open');
     }
 
@@ -374,7 +378,7 @@ var app = (function () {
     }
 } ())
 
-    
+
 var gridBuilder = new function() {
     this.labels = [];
     this.setConfig = function (datafields, records) {
@@ -386,12 +390,12 @@ var gridBuilder = new function() {
         this.datafields_source = datafields;
     }
 
-    this.columns = function (cellsrenderer) {    
+    this.columns = function (cellsrenderer) {
         var columns = [];
         for (var k in this.datafields) {
             var datafield = this.datafields[k];
             var column = {
-                text : datafield, 
+                text : datafield,
                 datafield : k,
                 align : 'center',
                 cellsalign : 'center',
@@ -408,7 +412,7 @@ var gridBuilder = new function() {
             if(k == 'message') {
                 column.width = '30%';
             }
-            columns.push(column);   
+            columns.push(column);
         }
 
         return columns;
@@ -416,49 +420,49 @@ var gridBuilder = new function() {
 
     this.setDropDownList = function(obj, objHidden, source, config) {
         var valDefault = $(objHidden).val();
-        var _cf =  {   source : source, 
-                    width : config && config.width ? config.width : '325px', 
-                    height : config && config.height ? config.height : '35px',
-                    renderer: function (index, label, value) 
-                    {
-                        var datarecord = source[index];
-                        if(datarecord == null)
-                            return;
+        var _cf =  {   source : source,
+            width : config && config.width ? config.width : '325px',
+            height : config && config.height ? config.height : '35px',
+            renderer: function (index, label, value)
+            {
+                var datarecord = source[index];
+                if(datarecord == null)
+                    return;
 
-                        if(datarecord.value && datarecord.description) {
-                             return '<img src="' + datarecord.logo +'" width="30" height="30"/> ' + datarecord.description ;
-                         } else if(datarecord.id && datarecord.name) {
-                                return datarecord.name;
-                         }
-                       return value;
-                    },
-                    selectionRenderer: function (htmlString) 
-                    {
-                        var item = $(obj).jqxDropDownList('getSelectedItem');
-                        if(item != null ) {
-                            if (source[item.index] && source[item.index].description) {
-                                return "<b>" + source[item.index].description + "</b>";
-                            } else return '<b>' + item.label+ '</b>';
-                        }
+                if(datarecord.value && datarecord.description) {
+                    return '<img src="' + datarecord.logo +'" width="30" height="30"/> ' + datarecord.description ;
+                } else if(datarecord.id && datarecord.name) {
+                    return datarecord.name;
+                }
+                return value;
+            },
+            selectionRenderer: function (htmlString)
+            {
+                var item = $(obj).jqxDropDownList('getSelectedItem');
+                if(item != null ) {
+                    if (source[item.index] && source[item.index].description) {
+                        return "<b>" + source[item.index].description + "</b>";
+                    } else return '<b>' + item.label+ '</b>';
+                }
 
-                        return "<b>Please Choose:</b>";
-                    },
-                    autoDropDownHeight : true,
-                    theme : 'ui-redmond'
-                }
-                if(config && config.value != null ) {
-                    _cf.valueMember = config.value;
-                }
-                
-                try {
-                    if(obj != null) {
-                        $(obj).jqxDropDownList(_cf);
-                        valDefault ? $(obj).jqxDropDownList('val', valDefault) : ''; 
-                    }
-                } catch(e) {
-                    console.log(e);
-                }
-            
+                return "<b>Please Choose:</b>";
+            },
+            autoDropDownHeight : true,
+            theme : 'ui-redmond'
+        }
+        if(config && config.value != null ) {
+            _cf.valueMember = config.value;
+        }
+
+        try {
+            if(obj != null) {
+                $(obj).jqxDropDownList(_cf);
+                valDefault ? $(obj).jqxDropDownList('val', valDefault) : '';
+            }
+        } catch(e) {
+            console.log(e);
+        }
+
     }
 
     this.initFormBet = function (match) {
@@ -480,13 +484,13 @@ var gridBuilder = new function() {
         this.setDropDownList($('#team-guess'), null, data, {width : '225px', height : '25px'});
         $('#price').jqxNumberInput({theme : 'ui-redmond', width: '225px', height: '25px', spinButtons: true });
         $("#result-bet").jqxNotification({
-                width: 500, opacity: 0.9,appendContainer : '#result-bet-container',
-                autoOpen: false, animationOpenDelay: 800, autoClose: true, 
-                autoCloseDelay: 1000, template: "info",
+            width: 500, opacity: 0.9,appendContainer : '#result-bet-container',
+            autoOpen: false, animationOpenDelay: 800, autoClose: true,
+            autoCloseDelay: 1000, template: "info",
         });
     }
 
-    this.contextMenu = function (grid, config, callback) {    
+    this.contextMenu = function (grid, config, callback) {
         var menu = config.menu;
         if(!menu) {
             return;
@@ -513,12 +517,12 @@ var gridBuilder = new function() {
             var type = $(this).attr('type');
             if(type == 'pdf')
             {
-                grid.jqxGrid('exportdata', 'pdf', 'jqxGrid');    
+                grid.jqxGrid('exportdata', 'pdf', 'jqxGrid');
             } else if(type == 'excel') {
-                 grid.jqxGrid('exportdata', 'xls', 'jqxGrid');
+                grid.jqxGrid('exportdata', 'xls', 'jqxGrid');
             } else if(type == 'csv') {
-                 grid.jqxGrid('exportdata', 'csv', 'jqxGrid');
-            }   
+                grid.jqxGrid('exportdata', 'csv', 'jqxGrid');
+            }
         })
 
         $('li[type="add"]').addClass('mini ui teal button');
@@ -539,7 +543,7 @@ var gridBuilder = new function() {
             }
         });
 
-        grid.on('mousedown', function (event) { 
+        grid.on('mousedown', function (event) {
             switch (event.which) {
                 case 1:
                     break;
@@ -558,13 +562,13 @@ var gridBuilder = new function() {
             return;
 
         var cellsrenderer = function (
-            row, 
-            columnfield, 
-            value, 
-            defaulthtml, 
+            row,
+            columnfield,
+            value,
+            defaulthtml,
             columnproperties,
             rowdata
-         ) {
+            ) {
             var data = grid.jqxGrid('getrowdata', row);
             var teams = localStorage.getItem('teams');
             var teams = teams != 'undefined' ? $.parseJSON(teams) : [];
@@ -585,7 +589,7 @@ var gridBuilder = new function() {
             } else if(columnproperties.datafield == 'status') {
                 if(data.status == 0)
                     return '<span style="margin: 4px;">' + 'Not Watch' + '</span>';
-                else 
+                else
                     return '<span style="margin: 4px;">' + 'Watched' + '</span>';
             } else if(columnproperties.datafield == 'created_at') {
                 return '<span style="margin: 4px;">' + data.created_at.time + '</span>';
@@ -604,12 +608,12 @@ var gridBuilder = new function() {
         var columns = this.columns();
 
         var config = {
-            width : configMenu.width ? configMenu.width : $('.ui.segment.content').width() - 40,
-            source: data, 
-            theme : 'ui-redmond',               
+            width : configMenu != null ? configMenu.width : $('.ui.segment.content').width() - 40,
+            source: data,
+            theme : 'ui-redmond',
             pageable: true,
             autoheight: true,
-            autorowheight: true,   
+            autorowheight: true,
             showfilterrow : true,
             sortable: true,
             editable : configMenu && configMenu.editable ? configMenu.editable : false,
@@ -617,7 +621,7 @@ var gridBuilder = new function() {
             altrows: true,
             filterable: true,
             enabletooltips: true,
-            columns: this.columns(cellsrenderer),
+            columns: this.columns(cellsrenderer)
         };
 
         if (configMenu == null) {
@@ -651,14 +655,14 @@ var gridBuilder = new function() {
                     $.each(feedbackContent.children(), function (index) {
                         if (index < groupslength)
                             return true;
-                            table += '<tr>';
-                            table += '<td>';
-                            table += columns[index - groupslength].text + ': ';
-                            table += '</td>';
-                            table += '<td>';
-                            table += $(this).text();
-                            table += '</td>';
-                            table += '</tr>';                           
+                        table += '<tr>';
+                        table += '<td>';
+                        table += columns[index - groupslength].text + ': ';
+                        table += '</td>';
+                        table += '<td>';
+                        table += $(this).text();
+                        table += '</td>';
+                        table += '</tr>';
                     });
                     table += '</table>';
                     feedback.html(table);
@@ -746,7 +750,7 @@ var matches = (function () {
                 ]
             );
 
-            this.initGrid($('#jqxgrid'), {menu : $('#Menu')}, 
+            this.initGrid($('#jqxgrid'), {menu : $('#Menu')},
                 function (grid, event) {
                     var args = event.args;
                     var rowindex = grid.jqxGrid('getselectedrowindex');
@@ -762,33 +766,33 @@ var matches = (function () {
                         $('#usermatchWindow').jqxWindow('open');
                         this.initFormBet(row);
                     }
-                }.bind(this)    
+                }.bind(this)
             );
             var msg = $("#message");
             if(msg.length > 0) {
                 $("#message").jqxNotification({
                     width: 250, position: "top-right", opacity: 0.9,
-                    autoOpen: false, animationOpenDelay: 800, autoClose: false, 
+                    autoOpen: false, animationOpenDelay: 800, autoClose: false,
                     autoCloseDelay: 5000, template: "info",
                 });
             }
-            
+
             msg = $("#messageToUser");
-             if(msg.length > 0) {
+            if(msg.length > 0) {
                 $("#messageToUser").jqxNotification({
                     width: 250, position: "top-right", opacity: 0.9,
-                    autoOpen: false, animationOpenDelay: 800, autoClose: false, 
+                    autoOpen: false, animationOpenDelay: 800, autoClose: false,
                     autoCloseDelay: 5000, template: "info",
                 });
-             }
+            }
         }.bind(this));
     }.bind(this);
 
     var initFormCreate  = function () {
         var grid = $('#team_list');
-       /* if(!grid) {
-            return false;
-        }*/
+        /* if(!grid) {
+         return false;
+         }*/
         var action = localStorage.getItem('action_form');
         var url = action != null ? action : 'create';
         $.ajax({
@@ -827,7 +831,7 @@ var matches = (function () {
                 ]
             );
 
-            this.initGrid($('#events_list'), {menu : $('#menu-events'), editable : true,height : '106px',width : '160px'}, 
+            this.initGrid($('#events_list'), {menu : $('#menu-events'), editable : true,height : '106px',width : '160px'},
                 function (grid, event) {
                     var args = event.args;
                     var rowindex = grid.jqxGrid('getselectedrowindex');
@@ -840,7 +844,7 @@ var matches = (function () {
                     }else if(content == "Delete Selected Row") {
                         grid.jqxGrid('deleterow', rowindex);
                     }
-                }        
+                }
             );
 
         }.bind(this));
@@ -848,7 +852,10 @@ var matches = (function () {
         //create number input
         var rate =  $('#rate');
         var league_list = $('#league-list');
-        rate.jqxNumberInput({theme : 'ui-redmond', width: '325px', height: '35px', spinButtons: true });
+        if(rate.length) {
+            rate.jqxNumberInput({theme : 'ui-redmond', width: '325px', height: '35px', spinButtons: true });
+        }
+
         var val = $('input[name="rate"]').val();
         val ? rate.jqxNumberInput('val', val) : '';
 
@@ -896,7 +903,7 @@ var notifications = new function () {
                 initContent: function () {
                     _window.jqxWindow('focus');
                 }
-            }); 
+            });
             _window.jqxWindow('open');
         }
 
@@ -905,7 +912,7 @@ var notifications = new function () {
     this.displayMessage = function(callback) {
         $.ajax({
             url : 'getListNotifications',
-            type : 'POST', 
+            type : 'POST',
         }).done(function(res) {
             if(res.notifications) {
                 this.initNotificationsList(res);
@@ -932,52 +939,56 @@ var newsBuilder = new function() {
     this.initMatchesGrid = function (data) {
         var grid = $('#matches-list');
         var dropdown = $("#matches-dropdown");
-        this.setConfig(data.datafields, data.matches);
-        this.setDatafields(
-            [
-                { name: 'id', type: 'int' },
-                { name: 'home_id', type: 'string' },
-                { name: 'guest_id', type: 'string' },
-                { name: 'home_name', type: 'string' },
-                { name: 'guest_name', type: 'string' },
-            ]
-        );
+        if(dropdown && grid) {
+            this.setConfig(data.datafields, data.matches);
+            this.setDatafields(
+                [
+                    { name: 'id', type: 'int' },
+                    { name: 'home_id', type: 'string' },
+                    { name: 'guest_id', type: 'string' },
+                    { name: 'home_name', type: 'string' },
+                    { name: 'guest_name', type: 'string' },
+                ]
+            );
 
-        this.initGrid(grid, {width : 500}, null);
+            this.initGrid(grid, {width : 500}, null);
 
-        grid.on('rowselect', function (event) {
-            var args = event.args;
-            var row = grid.jqxGrid('getrowdata', args.rowindex);
-            var dropDownContent = '<div style="position: relative; margin-left: 3px; margin-top: 5px;">' + row['home_name'] + ' - ' + row['guest_name'] + '</div>';
-            dropdown.jqxDropDownButton('setContent', dropDownContent);
-            dropdown.attr('value', row.id);
-            dropdown.jqxDropDownButton('close');
-        });
+            grid.on('rowselect', function (event) {
+                var args = event.args;
+                var row = grid.jqxGrid('getrowdata', args.rowindex);
+                var dropDownContent = '<div style="position: relative; margin-left: 3px; margin-top: 5px;">' + row['home_name'] + ' - ' + row['guest_name'] + '</div>';
+                dropdown.jqxDropDownButton('setContent', dropDownContent);
+                dropdown.attr('value', row.id);
+                dropdown.jqxDropDownButton('close');
+            });
+        }
+
     }.bind(gridBuilder);
 
     var parent = this;
     this.dropDownMatches = function () {
-
-        $.ajax({
-            url : 'news',
-            type : 'GET'   
-        }).done(function(res){
-            console.log(res);
-            $("#matches-dropdown").jqxDropDownButton({
-                width: 250, height: 25, theme : 'ui-redmond'
-            });
-            this.initMatchesGrid(res);
-        }.bind(parent));
-        
+        var matches = $("#matches-dropdown");
+        if(matches.length > 0) {
+            $.ajax({
+                url : 'news',
+                type : 'GET'
+            }).done(function(res){
+                console.log(res);
+                $("#matches-dropdown").jqxDropDownButton({
+                    width: 250, height: 25, theme : 'ui-redmond'
+                });
+                this.initMatchesGrid(res);
+            }.bind(parent));
+        }
     }
 
     this.editor = function () {
         /*var editor = $('#content');
-        editor.jqxEditor({
-            height: 350,
-            width: 550,
-            theme: 'ui-redmond',
-        });*/
+         editor.jqxEditor({
+         height: 350,
+         width: 550,
+         theme: 'ui-redmond',
+         });*/
     }
 
     this.bindEvent = function () {

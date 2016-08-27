@@ -22,7 +22,8 @@ class BestPlayerOfLeague extends Model
         return $this->belongsTo(Player::class);
     }
 
-    public function leaguaSeason()
+
+    public function leagueSeason()
     {
         return $this->belongsTo(LeagueSeason::class);
     }

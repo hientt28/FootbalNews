@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class UserMatch extends Model
 {
     protected $table = 'user_match';
+
     protected $fillable = [
         'user_id',
         'match_id',

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class LeagueSeason extends Model
 {
+    protected $table = 'league_season';
     protected $fillable = [
         'league_id',
         'season_id',

@@ -65,7 +65,7 @@ class User extends Authenticatable
         return $this->hasMany(Notification::class);
     }
 
-    public function userMatch()
+    public function userMatches()
     {
         return $this->hasMany(UserMatch::class);
     }
